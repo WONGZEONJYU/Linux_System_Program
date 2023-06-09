@@ -1,11 +1,11 @@
-execve("\x2e\x2f\x66\x63\x6f\x70\x79\x2e\x6f\x75\x74", ["\x2e\x2f\x66\x63\x6f\x70\x79\x2e\x6f\x75\x74", "\x2e\x2f\x6e\x65\x77\x5f\x70\x72\x6f\x67\x72\x61\x6d\x2e\x6f\x75\x74", "\x2e\x2f\x70\x72\x6f\x67\x72\x61\x6d\x2e\x6f\x75\x74"], 0x7ffc8e883d18 /* 61 vars */) = 0
-brk(NULL)                               = 0x5599375f3000
-arch_prctl(0x3001 /* ARCH_??? */, 0x7ffeccf299b0) = -1 EINVAL (无效的参数)
-mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f65df67b000
+execve("\x2e\x2f\x66\x63\x6f\x70\x79\x2e\x6f\x75\x74", ["\x2e\x2f\x66\x63\x6f\x70\x79\x2e\x6f\x75\x74", "\x2e\x2f\x6e\x65\x77\x5f\x70\x72\x6f\x67\x72\x61\x6d\x2e\x6f\x75\x74", "\x2e\x2f\x70\x72\x6f\x67\x72\x61\x6d\x2e\x6f\x75\x74"], 0x7ffe650fbfc8 /* 61 vars */) = 0
+brk(NULL)                               = 0x558281873000
+arch_prctl(0x3001 /* ARCH_??? */, 0x7ffc7cf73070) = -1 EINVAL (无效的参数)
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f58503e4000
 access("\x2f\x65\x74\x63\x2f\x6c\x64\x2e\x73\x6f\x2e\x70\x72\x65\x6c\x6f\x61\x64", R_OK) = -1 ENOENT (没有那个文件或目录)
 openat(AT_FDCWD, "\x2f\x65\x74\x63\x2f\x6c\x64\x2e\x73\x6f\x2e\x63\x61\x63\x68\x65", O_RDONLY|O_CLOEXEC) = 3
 newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=71371, ...}, AT_EMPTY_PATH) = 0
-mmap(NULL, 71371, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f65df669000
+mmap(NULL, 71371, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f58503d2000
 close(3)                                = 0
 openat(AT_FDCWD, "\x2f\x6c\x69\x62\x2f\x78\x38\x36\x5f\x36\x34\x2d\x6c\x69\x6e\x75\x78\x2d\x67\x6e\x75\x2f\x6c\x69\x62\x63\x2e\x73\x6f\x2e\x36", O_RDONLY|O_CLOEXEC) = 3
 read(3, "\x7f\x45\x4c\x46\x02\x01\x01\x03\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x3e\x00\x01\x00\x00\x00\x50\x9f\x02\x00\x00\x00\x00\x00"..., 832) = 832
@@ -14,22 +14,22 @@ pread64(3, "\x04\x00\x00\x00\x20\x00\x00\x00\x05\x00\x00\x00\x47\x4e\x55\x00\x02
 pread64(3, "\x04\x00\x00\x00\x14\x00\x00\x00\x03\x00\x00\x00\x47\x4e\x55\x00\x69\x38\x9d\x48\x5a\x97\x93\xdb\xe8\x73\xf0\xea\x2c\x93\xe0\x2e"..., 68, 896) = 68
 newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=2216304, ...}, AT_EMPTY_PATH) = 0
 pread64(3, "\x06\x00\x00\x00\x04\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00"..., 784, 64) = 784
-mmap(NULL, 2260560, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f65df400000
-mmap(0x7f65df428000, 1658880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7f65df428000
-mmap(0x7f65df5bd000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1bd000) = 0x7f65df5bd000
-mmap(0x7f65df615000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x214000) = 0x7f65df615000
-mmap(0x7f65df61b000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f65df61b000
+mmap(NULL, 2260560, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f5850000000
+mmap(0x7f5850028000, 1658880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7f5850028000
+mmap(0x7f58501bd000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1bd000) = 0x7f58501bd000
+mmap(0x7f5850215000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x214000) = 0x7f5850215000
+mmap(0x7f585021b000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f585021b000
 close(3)                                = 0
-mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f65df666000
-arch_prctl(ARCH_SET_FS, 0x7f65df666740) = 0
-set_tid_address(0x7f65df666a10)         = 29977
-set_robust_list(0x7f65df666a20, 24)     = 0
-rseq(0x7f65df6670e0, 0x20, 0, 0x53053053) = 0
-mprotect(0x7f65df615000, 16384, PROT_READ) = 0
-mprotect(0x5599374d0000, 4096, PROT_READ) = 0
-mprotect(0x7f65df6b5000, 8192, PROT_READ) = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f58503cf000
+arch_prctl(ARCH_SET_FS, 0x7f58503cf740) = 0
+set_tid_address(0x7f58503cfa10)         = 31442
+set_robust_list(0x7f58503cfa20, 24)     = 0
+rseq(0x7f58503d00e0, 0x20, 0, 0x53053053) = 0
+mprotect(0x7f5850215000, 16384, PROT_READ) = 0
+mprotect(0x55827fc61000, 4096, PROT_READ) = 0
+mprotect(0x7f585041e000, 8192, PROT_READ) = 0
 prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
-munmap(0x7f65df669000, 71371)           = 0
+munmap(0x7f58503d2000, 71371)           = 0
 openat(AT_FDCWD, "\x2e\x2f\x6e\x65\x77\x5f\x70\x72\x6f\x67\x72\x61\x6d\x2e\x6f\x75\x74", O_WRONLY|O_CREAT, 0600) = 3
 openat(AT_FDCWD, "\x2e\x2f\x70\x72\x6f\x67\x72\x61\x6d\x2e\x6f\x75\x74", O_RDONLY) = 4
 read(4, "\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x03\x00\x01\x00\x00\x00\x00\x10\x00\x00\x34\x00\x00\x00"..., 512) = 512
@@ -90,9 +90,9 @@ read(4, "", 512)                        = 0
 close(3)                                = 0
 close(4)                                = 0
 newfstatat(1, "", {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}, AT_EMPTY_PATH) = 0
-getrandom("\x9d\xc4\xc4\x8c\x64\xff\x31\xf4", 8, GRND_NONBLOCK) = 8
-brk(NULL)                               = 0x5599375f3000
-brk(0x559937614000)                     = 0x559937614000
+getrandom("\x4c\x7a\x8f\xc6\x66\xdd\xce\x03", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x558281873000
+brk(0x558281894000)                     = 0x558281894000
 write(1, "\x63\x6f\x70\x79\x20\x63\x6f\x6d\x70\x6c\x65\x74\x65\x64\x0a", 15) = 15
 exit_group(0)                           = ?
 +++ exited with 0 +++

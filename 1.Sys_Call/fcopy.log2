@@ -1,11 +1,11 @@
-execve("./fcopy.out", ["./fcopy.out", "./new_program.out", "./program.out"], 0x7ffe6814d708 /* 61 vars */) = 0
-brk(NULL)                               = 0x55cfff4f1000
-arch_prctl(0x3001 /* ARCH_??? */, 0x7fff9c129ea0) = -1 EINVAL (无效的参数)
-mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff51d326000
+execve("./fcopy.out", ["./fcopy.out", "./new_program.out", "./program.out"], 0x7ffd577fcf08 /* 61 vars */) = 0
+brk(NULL)                               = 0x559cb08a8000
+arch_prctl(0x3001 /* ARCH_??? */, 0x7ffc7ee69cd0) = -1 EINVAL (无效的参数)
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2fe7a12000
 access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (没有那个文件或目录)
 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=71371, ...}, AT_EMPTY_PATH) = 0
-mmap(NULL, 71371, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7ff51d314000
+mmap(NULL, 71371, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f2fe7a00000
 close(3)                                = 0
 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
 read(3, "\x7f\x45\x4c\x46\x02\x01\x01\x03\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x3e\x00\x01\x00\x00\x00\x50\x9f\x02\x00\x00\x00\x00\x00"..., 832) = 832
@@ -14,22 +14,22 @@ pread64(3, "\x04\x00\x00\x00\x20\x00\x00\x00\x05\x00\x00\x00\x47\x4e\x55\x00\x02
 pread64(3, "\x04\x00\x00\x00\x14\x00\x00\x00\x03\x00\x00\x00\x47\x4e\x55\x00\x69\x38\x9d\x48\x5a\x97\x93\xdb\xe8\x73\xf0\xea\x2c\x93\xe0\x2e"..., 68, 896) = 68
 newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=2216304, ...}, AT_EMPTY_PATH) = 0
 pread64(3, "\x06\x00\x00\x00\x04\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00\x40\x00\x00\x00\x00\x00\x00\x00"..., 784, 64) = 784
-mmap(NULL, 2260560, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff51d000000
-mmap(0x7ff51d028000, 1658880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7ff51d028000
-mmap(0x7ff51d1bd000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1bd000) = 0x7ff51d1bd000
-mmap(0x7ff51d215000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x214000) = 0x7ff51d215000
-mmap(0x7ff51d21b000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7ff51d21b000
+mmap(NULL, 2260560, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2fe7600000
+mmap(0x7f2fe7628000, 1658880, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7f2fe7628000
+mmap(0x7f2fe77bd000, 360448, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1bd000) = 0x7f2fe77bd000
+mmap(0x7f2fe7815000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x214000) = 0x7f2fe7815000
+mmap(0x7f2fe781b000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f2fe781b000
 close(3)                                = 0
-mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff51d311000
-arch_prctl(ARCH_SET_FS, 0x7ff51d311740) = 0
-set_tid_address(0x7ff51d311a10)         = 29973
-set_robust_list(0x7ff51d311a20, 24)     = 0
-rseq(0x7ff51d3120e0, 0x20, 0, 0x53053053) = 0
-mprotect(0x7ff51d215000, 16384, PROT_READ) = 0
-mprotect(0x55cffef45000, 4096, PROT_READ) = 0
-mprotect(0x7ff51d360000, 8192, PROT_READ) = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2fe79fd000
+arch_prctl(ARCH_SET_FS, 0x7f2fe79fd740) = 0
+set_tid_address(0x7f2fe79fda10)         = 31438
+set_robust_list(0x7f2fe79fda20, 24)     = 0
+rseq(0x7f2fe79fe0e0, 0x20, 0, 0x53053053) = 0
+mprotect(0x7f2fe7815000, 16384, PROT_READ) = 0
+mprotect(0x559cb0878000, 4096, PROT_READ) = 0
+mprotect(0x7f2fe7a4c000, 8192, PROT_READ) = 0
 prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
-munmap(0x7ff51d314000, 71371)           = 0
+munmap(0x7f2fe7a00000, 71371)           = 0
 openat(AT_FDCWD, "./new_program.out", O_WRONLY|O_CREAT, 0600) = 3
 openat(AT_FDCWD, "./program.out", O_RDONLY) = 4
 read(4, "\x7f\x45\x4c\x46\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x03\x00\x03\x00\x01\x00\x00\x00\x00\x10\x00\x00\x34\x00\x00\x00"..., 512) = 512
@@ -90,9 +90,9 @@ read(4, "", 512)                        = 0
 close(3)                                = 0
 close(4)                                = 0
 newfstatat(1, "", {st_mode=S_IFCHR|0620, st_rdev=makedev(0x88, 0), ...}, AT_EMPTY_PATH) = 0
-getrandom("\xb8\x78\x20\x9d\x79\xa0\xa2\xee", 8, GRND_NONBLOCK) = 8
-brk(NULL)                               = 0x55cfff4f1000
-brk(0x55cfff512000)                     = 0x55cfff512000
+getrandom("\x4a\xba\xcb\xa5\x54\xb5\x95\x6d", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x559cb08a8000
+brk(0x559cb08c9000)                     = 0x559cb08c9000
 write(1, "copy completed\n", 15)        = 15
 exit_group(0)                           = ?
 +++ exited with 0 +++

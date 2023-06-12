@@ -4,6 +4,17 @@
 
 constexpr char EXE[] {"helloworld.out"};
 
+int create_process(const char* path,char* args[])
+{
+    int ret {fork()};
+
+    if (0 == ret){
+        execve(path,args,nullptr);
+    }
+
+    return ret;
+}
+
 int main(int argc, char const *argv[])
 {
     char* args[] {const_cast<char*>(EXE),nullptr};
@@ -12,7 +23,9 @@ int main(int argc, char const *argv[])
 
     printf("pid = %d\n",getpid());
 
-    execve(EXE,args,nullptr);
+    // execve(EXE,args,nullptr);
+
+    printf("child pid = %d\n",create_process(EXE,args));
 
     printf("end\n");
 

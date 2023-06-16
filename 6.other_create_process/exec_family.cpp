@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     sprintf(pids,"%d",getpid());
 
-    execl("/bin/pstree", "pstree", "-A", "-p", "-s", pids, nullptr);
+    execl("/bin/pstree", "pstree", "-A", "-p", "-s",pids, nullptr);
     execlp("pstree", "pstree", "-A", "-p", "-s", pids, nullptr);
     execle("/bin/pstree", "pstree", "-A", "-p", "-s", pids, nullptr, ps_envp);
     execv("/bin/pstree", ps_argv);

@@ -23,8 +23,7 @@ int main(int argc, char* argv[])
         var++;
         std::cout << "pid = " <<  getpid() << ", var = " << var << "\n";
         // return 0; /* destroy parent stack frame */
-        //_exit(0);
-        return 0;
+        _exit(0);
     }
 
     std::cout << "parent = " << getpid() << ", var = " << var << "\n";

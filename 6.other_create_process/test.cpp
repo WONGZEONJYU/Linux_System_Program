@@ -39,6 +39,8 @@ int main(int argc, char *argv[])
 
     int result {create_process(target,ps_argv,ps_envp,1)};
 
+    //int result {system(target)};
+
     std::cout << "result = " << result << "\n";
 
     return 0;

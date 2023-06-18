@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
 
         buf[(len > 0)? len : 0] = 0;
 
-        std::cout << "Read: "<< buf <<"\n";
+        std::cout << "Read: "<< buf <<"\n"; /*system(...)*/
 
         close(slave);
 

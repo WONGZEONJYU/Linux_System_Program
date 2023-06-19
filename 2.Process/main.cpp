@@ -14,6 +14,7 @@ int main(int argc, char const *argv[])
         
         g_global = 1;
         usleep(100);
+        //sleep(100);
         printf("child = %d!\n",pid);
         printf("%d g_global = %d\n",getpid(),g_global);
     }else{

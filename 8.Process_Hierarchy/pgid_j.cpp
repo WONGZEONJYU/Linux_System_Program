@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <iostream>
 
-int main()
+int main(int argc,char* argv[])
 {
     std::cout << "parent pid = " << getpid() << ", ppid = " << getppid() << ", pgid = " << getpgrp() << "\n";
 
@@ -29,6 +29,6 @@ int main()
     if( pid ){
         sleep(60);
     }
-   
+
     return 0;
 }

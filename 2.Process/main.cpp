@@ -1,27 +1,27 @@
 #include <cstdio>
+#include <cstdlib>
 #include <unistd.h>
+#include <iostream>
 
-static int g_global {};
+static int g_global{};
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
+    std::cout << "Hello World!\n";
+    std::cout << "current = " << getpid() << "!\n";
     int pid {};
-
-    printf("Hello World!\n");
-    printf("current = %d!\n",getpid());
 
     if ((pid = fork()) > 0){
         
         g_global = 1;
+        //sleep(60);
         usleep(100);
-        printf("child = %d!\n",pid);
-        printf("%d g_global = %d\n",getpid(),g_global);
+        std::cout << "child = " << pid << "!\n";
+        std::cout << "child pid = " << getpid() << " g_global = " << g_global << "\n";
     }else{
-        
         g_global = 10;
-        printf("parent = %d!\n",getppid());
-        printf("%d g_global = %d\n",getpid(),g_global);
+        std::cout << "parent = " << getppid() << "!\n";
+        std::cout << "current pid = " << getpid() << " g_global = " << g_global << "!\n";
     }
-
     return 0;
 }

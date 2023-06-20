@@ -1,16 +1,17 @@
-#include <stdio.h>
+#include <cstdio>
 #include <sys/types.h>
 #include <unistd.h>
+#include <iostream>
 
 #define EXE "helloworld.out"
 
 int main(int argc, char const *argv[])
 {
-    char* args[] = {EXE,NULL};
+    char* args[] = {const_cast<char*>(EXE),NULL};
 
-    printf("begin\n");
+    std::cout << "begin\n";
 
-    printf("pid = %d\n",getpid());
+    std::cout << "pid = " << getpid() << "\n";
 
     execve(EXE,args,NULL);
 

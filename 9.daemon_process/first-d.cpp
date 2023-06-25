@@ -19,7 +19,6 @@ int main(int argc, char* argv[])
 
         setsid();
 
-
         if ((pid = fork()) > 0)
         {
             

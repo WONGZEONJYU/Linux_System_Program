@@ -68,14 +68,12 @@ static int T_Handler(const char* n,const char* v)
     return W_Handler(n,v) || A_Handler(n,v);
 }
 
-static const CallHandler g_handler[] {
+static constexpr CallHandler g_handler[] {
     {'a',A_Handler},
     {'r',R_Handler},
     {'w',W_Handler},
     {'t',T_Handler},
 };
-
-static constexpr int g_len {sizeof(g_handler)/sizeof(*g_handler)};
 
 int main(int argc, char *argv[])
 {
@@ -98,12 +96,14 @@ int main(int argc, char *argv[])
                 value = optarg;
                 break;
             default:
-                printf("exit!\n\r");
+                std::cout << "exit!\n\r";
                 exit(-1);
                 break;
         }
     }
-    
+
+    static constexpr int g_len {sizeof(g_handler)/sizeof(*g_handler)};
+
     for ( c = 0; c < g_len; c++){
         
         if (opt == g_handler[c].opt){

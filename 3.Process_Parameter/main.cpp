@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 
     char* fvalue {};
 
-    while( (c = getopt(argc, argv, "f:is"))  != -1 ) {
+    while( (c = getopt(argc, argv, ":f:is"))  != -1 ) {
 
         switch( c ) {
             case 'f':

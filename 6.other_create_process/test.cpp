@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include <iostream>
 
-constexpr char EXE[] {"helloworld.out"};
-
 int create_process(const char* path,char* const args[],char* const env[],const int wait)
 {
     int ret {fork()};

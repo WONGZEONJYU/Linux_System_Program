@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
         { "delete",  required_argument, &flag, 'd' }, 
         { "clear",   no_argument,       &flag, 'c' },
         { "list",    optional_argument, &flag, 'l' },
-        { 0,         0,                 0,      0  },
+        { nullptr,   0,                 nullptr,0  },
     };
 
     while( true ){
@@ -37,15 +37,14 @@ int main(int argc, char* argv[])
         }
     }
 
-   if( optind < argc ){
+    if( optind < argc ){
 
         std::cout << "parameters:\n";
 
         while (optind < argc){
-            //printf("%s\n", argv[optind++]);
             std::cout << argv[optind++] << "\n";
         }
     }
- 
+
    return 0;
 }

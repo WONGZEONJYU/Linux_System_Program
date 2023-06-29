@@ -9,17 +9,25 @@
 #include <unistd.h>
 #include <signal.h>
 
-void signal_handler(int sig)
+void delay_handler(int sig)
 {
-    std::cout << "handler : sig = " << sig << "\n";
+    sysv_signal(SIGINT, delay_handler);
+
+    std::cout << "begin " << __FUNCTION__ << "...\n";
+
+    for (int i {}; i < 5; i++){
+        std::cout << "sleep " << i <<"...\n";
+        sleep(1);
+    }
+
+    std::cout << "end " << __FUNCTION__ << "...\n";
 }
 
 int main(int argc,char* argv[])
 {
-    signal(SIGINT, signal_handler);
+    // signal(SIGINT, signal_handler);
     // signal(40, signal_handler);
-
-    //sysv_signal(SIGINT, signal_handler);
+    sysv_signal(SIGINT, delay_handler);
     //bsd_signal(SIGINT, signal_handler);/*在cpp文件编译不通过,暂时不知道原因,编译器提示换成ssignal(...)*/
     //ssignal(SIGINT, signal_handler); 
 

@@ -7,29 +7,35 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <signal.h>
+#include <errno.h>
 
 void delay_handler(int sig)
 {
-    printf("begin %s....\n",__FUNCTION__);
+    printf("begin %s...\n",__FUNCTION__);
 
     for (int i = 0; i < 5; i++){
-        printf("sleep %d...\n",i);
+        printf("sleep %d ...\n",i);
         sleep(1);
     }
 
     printf("end %s...\n",__FUNCTION__);
 }
 
+void signal_handler(int sig)
+{
+    printf("%s : sig = %d\n",__FUNCTION__,sig);
+}
+
 int main(void)
 {
-    //signal(SIGINT, signal_handler);
-    //signal(40, signal_handler);
-    //sysv_signal(SIGINT, signal_handler);
     bsd_signal(SIGINT, delay_handler);
 
-    while( 1 ){
+    bsd_signal(40, signal_handler);
+
+    for(;;){
         sleep(1);
     }
 
     return 0;
 }
+

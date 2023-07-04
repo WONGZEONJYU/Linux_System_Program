@@ -8,10 +8,9 @@
 static int g_type {-1},g_length{-1},g_current{-1},g_obj_sig{};
 static char* g_data {};
 
-static void ipc_data_handler(char* data,int)
+static void ipc_data_handler(char* data,const int length)
 {
-    //printf("ipc data: %s\n", data);
-    std::cout << "ipc data: "<< (data ? data : "(null)") << "\n";
+    std::cout << "data length: "<<  (length - 1) << ", ipc data: "<< (data ? data : "(null)") << "\n";
 }
 
 static void signal_handler(const int sig,siginfo_t* info,void*)
@@ -27,13 +26,17 @@ static void signal_handler(const int sig,siginfo_t* info,void*)
             g_current = 0;
             g_data = reinterpret_cast<char*>(malloc(g_length));
 
+            if (!g_data) {
+                exit(-1);
+            }
+
         }else{
 
             int i {};
 
             while ((i < 4) && (g_current < g_length)){
 
-                g_data[g_current++] = (data >> (i * 8)) & 0xFF;
+                g_data[g_current++] = ((data >> (i * 8)) & 0xFF);
                 ++i;
             }
         }

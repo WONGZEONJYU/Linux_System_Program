@@ -31,13 +31,12 @@ int main(int argc, const char* argv[])
         
         msg->type = 0;
         msg->length = len - sizeof(Message);
-
         strcpy(msg->data,data);
 
         auto pi {reinterpret_cast<const int*>(msg)};
 
         for (int i {}; i < size; i+=4){
-            sigval sv {*pi++};
+            const sigval sv {*pi++};
             sigqueue(pid,sig,sv);
         }
     }

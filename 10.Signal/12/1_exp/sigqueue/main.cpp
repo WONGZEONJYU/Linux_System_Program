@@ -49,6 +49,7 @@ int main(int argc,char* argv[])
 {
     struct sigaction act{};
     act.sa_sigaction = signal_handler;
+    
     act.sa_flags = SA_RESTART | SA_SIGINFO;
 
     sigaddset(&act.sa_mask,40);

@@ -1,52 +1,71 @@
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 #include <sys/types.h>
 #include <unistd.h>
 #include <signal.h>
-#include <iostream>
-#include <cstring>
-#include <time.h>
 
-static bool find(const int* arr,const int len,const int v)
+struct SigInfo
 {
-    bool ret {};
+    int sig,index;
+};
 
-    for (int i {}; i < len; i++){
+static int g_index{};
+static SigInfo g_sig_arr[128] {};
 
-        ret = ret || (v == arr[i]);
-    }
-
-    return ret;
+static void signal_handler(const int sig,siginfo_t* info,void*)
+{
+    g_sig_arr[g_index].sig = info->si_signo;
+    g_sig_arr[g_index].index = info->si_value.sival_int;
+    ++g_index;
 }
 
-int main(int argc, const char* argv[])
+int main(int argc,const char* argv[])
 {
-    std::cout << "current pid(" << getpid() << ")...\n";
+    std::cout << "current pid (" << getpid() << ") ...\n";
 
-    const auto pid {atoi(argv[1])}, //process pid
-    num {atoi(argv[2])};    //define the number of signal
+    struct sigaction act {};
+    act.sa_sigaction = signal_handler;
+    act.sa_flags = SA_SIGINFO | SA_RESTART;
 
-    constexpr int special[] {SIGSTOP,SIGKILL,32,33};
+    sigfillset(&act.sa_mask);   //屏蔽信号，不让别的信号中断当前信号的处理
 
-    //SIGSEGV、SIGBUS、SIGLL、SIGTRAP、SIGFPE、SIGSYS
+    // for (int i {1}; i < NSIG; i++){  //屏蔽信号，不让别的信号中断当前信号的处理
+    //     sigaddset(&act.sa_mask,i);
+    // }
 
-    constexpr auto slen {sizeof(special) / sizeof(*special)};
-
-    srand(time(nullptr));
-
-    for (int i {}; i < num; i++){
-
-        int sig{};
-        do{
-            sig = rand() % 33 + 32;
-        } while (find(special,slen,sig));
-
-        std::cout << "send sig[" << (i + 1) << "](" << sig << ") to process(" << pid << ")...\n";
-
-        const sigval sv {i+1};
-        sigqueue(pid,sig,sv);
+    for (int i {1}; i < NSIG; i++){
+        sigaction(i,&act,nullptr);
     }
 
-    return 0;
+    sigset_t set {};
+
+    sigfillset(&set);
+    sigprocmask(SIG_SETMASK,&set,nullptr);
+
+    for (int i {}; i < 15; i++){
+        sleep(1);
+        std::cout << "i = " << i << "\n";
+    }
+
+    sigemptyset(&set);
+    sigprocmask(SIG_SETMASK,&set,nullptr);
+
+    for (int i {}; i < g_index; i++){
+
+        std::cout << "send signum = " << g_sig_arr[i].sig << 
+            ",send index = " << g_sig_arr[i].index << "\n";
+    }
+
+    exit(0);
 }
 
+#if 0
+void print_sigset(const sigset_t *set)
+{
+    for(int i {1}; i < NSIG; ++i){
+        sigismember(set,i) ? (std::cout << "1") : (std::cout << "0");
+    }
+    std::cout << "\n";
+}
+#endif

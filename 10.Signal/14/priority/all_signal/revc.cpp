@@ -13,7 +13,7 @@ struct SigInfo
 static int g_index{};
 static SigInfo g_sig_arr[128] {};
 
-static void signal_handler(const int sig,siginfo_t* info,void*)
+static void signal_handler(const int,siginfo_t* info,void*)
 {
     g_sig_arr[g_index].sig = info->si_signo;
     g_sig_arr[g_index].index = info->si_value.sival_int;
@@ -41,15 +41,19 @@ int main(int argc,const char* argv[])
     sigset_t set {};
 
     sigfillset(&set);
-    sigprocmask(SIG_SETMASK,&set,nullptr);
+    sigprocmask(SIG_SETMASK,&set,nullptr);/*屏蔽所有信号，让所有信号处于未决
+                                            信号无法触发任何处理函数，包括默认行为*/
 
     for (int i {}; i < 15; i++){
         sleep(1);
         std::cout << "i = " << i << "\n";
     }
 
+    std::cout << "\n";
+
     sigemptyset(&set);
-    sigprocmask(SIG_SETMASK,&set,nullptr);
+    sigprocmask(SIG_SETMASK,&set,nullptr);/*解除所有被屏蔽的信号，让信号递达进程，
+                                            按信号优先级处理*/
 
     for (int i {}; i < g_index; i++){
 

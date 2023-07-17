@@ -28,13 +28,11 @@ int main(int argc,const char* argv[])
     act.sa_sigaction = signal_handler;
     act.sa_flags = SA_SIGINFO | SA_RESTART;
 
-    sigfillset(&act.sa_mask);   //屏蔽信号，不让别的信号中断当前信号的处理
+    for (int i {1}; i <= 64; i++){  //屏蔽信号，不让别的信号中断当前信号的处理
+        sigaddset(&act.sa_mask,i);
+    }
 
-    // for (int i {1}; i < NSIG; i++){  //屏蔽信号，不让别的信号中断当前信号的处理
-    //     sigaddset(&act.sa_mask,i);
-    // }
-
-    for (int i {1}; i < NSIG; i++){
+    for (int i {1}; i <= 64; i++){
         sigaction(i,&act,nullptr);
     }
 
@@ -65,6 +63,7 @@ int main(int argc,const char* argv[])
 }
 
 #if 0
+//sigfillset(&act.sa_mask);   //屏蔽信号，不让别的信号中断当前信号的处理
 void print_sigset(const sigset_t *set)
 {
     for(int i {1}; i < NSIG; ++i){

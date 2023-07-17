@@ -25,8 +25,8 @@ static void do_job(const int argc,void* argv)
 
 static constexpr Job g_job[] {
     {1,const_cast<char*>("Delphi"),do_job},
-    {1,const_cast<char*>("D.T.Software"),do_job},
-    {1,const_cast<char*>("Tang"),do_job},
+    {2,const_cast<char*>("D.T.Software"),do_job},
+    {3,const_cast<char*>("Tang"),do_job},
 };
 
 static constexpr int g_jlen {sizeof(g_job) / sizeof(*g_job)};
@@ -42,12 +42,37 @@ static void signal_handler(const int sig, siginfo_t* info, void*)
 
 static void do_sig_process(siginfo_t* info)
 {
-
+    std::cout << __FUNCTION__ << ": " <<  
+        info->si_signo << " --> " << 
+        info->si_value.sival_int << "\n";
+    /*do process for the obj signal*/
+    switch (info->si_signo)
+    {
+    case SIGINT:
+        /* call process function for  SIGINT*/
+        break;
+    case 40:
+        /*  call process function for 40*/
+        break;
+    default:
+        break;
+    }
 }
 
 static void process_signal()
 {
+    if (g_sig_arr[0].si_signo){
+        
+        for (int i {1}; i < g_slen; i++){
 
+            if (g_sig_arr[i].si_signo){
+
+                do_sig_process(&g_sig_arr[i]);
+                g_sig_arr[i].si_signo = 0;
+                --g_sig_arr[0].si_signo;
+            }
+        }
+    }
 }
 
 static void app_init()

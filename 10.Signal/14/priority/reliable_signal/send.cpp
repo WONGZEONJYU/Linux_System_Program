@@ -37,7 +37,7 @@ int main(int argc, const char* argv[])
         int sig{};
         do{
             sig = rand() % 33 + 32; //产生可靠信号
-        } while (find(special,slen,sig));
+        } while (find(special,slen,sig));   /*避开特殊信号*/
 
         std::cout << "send sig[" << (i + 1) << "](" << sig << ") to process(" << pid << ")...\n";
 

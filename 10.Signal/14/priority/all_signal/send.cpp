@@ -10,12 +10,9 @@
 static bool find(const int* arr,const int len,const int v)
 {
     bool ret {};
-
     for (int i {}; i < len; i++){
-
         ret = ret || (v == arr[i]);
     }
-
     return ret;
 }
 
@@ -42,7 +39,8 @@ int main(int argc, const char* argv[])
             sig = rand() % 64 + 1; //随机产生信号
         } while (find(special,slen,sig));
 
-        std::cout << "send sig[" << (i + 1) << "](" << sig << ") to process(" << pid << ")...\n";
+        std::cout << "send sig[" << (i + 1) << "](" << 
+            sig << ") to process(" << pid << ")...\n";
 
         const sigval sv {i+1};
         sigqueue(pid,sig,sv);
@@ -50,11 +48,12 @@ int main(int argc, const char* argv[])
 
     std::cout << "\n";
 
-    for (int i {}; i < hlen; i++){  /*发送优先级最高的信号*/
-
+    /*发送优先级最高的信号(硬件相关的不可靠信号)*/
+    for (int i {}; i < hlen; i++){  
+        
         const auto sig {hight[i]};
-        std::cout << "sig[" << i << "] = " << sig << "\n";
-        const sigval sv {-(i+1)};
+        std::cout << "sig[" << (-(i+1)) << "] = " << sig << "\n";
+        const sigval sv {-(i+1)};/*用负数便于观察和区分*/
         sigqueue(pid,sig,sv);
     }
 

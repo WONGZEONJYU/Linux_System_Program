@@ -25,8 +25,8 @@ static void do_job(const int argc,void* argv)
 
 static constexpr Job g_job[] {
     {1,const_cast<char*>("Delphi"),do_job},
-    {1,const_cast<char*>("D.T.Software"),do_job},
-    {1,const_cast<char*>("Tang"),do_job},
+    {2,const_cast<char*>("D.T.Software"),do_job},
+    {3,const_cast<char*>("Tang"),do_job},
 };
 
 static constexpr int g_jlen {sizeof(g_job) / sizeof(*g_job)};

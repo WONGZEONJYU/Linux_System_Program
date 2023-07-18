@@ -28,12 +28,14 @@ int main(int argc,const char* argv[])
     act.sa_sigaction = signal_handler;
     act.sa_flags = SA_SIGINFO | SA_RESTART;
 
-    for (int i {1}; i <= 64; i++){  //屏蔽信号，不让别的信号中断当前信号的处理
+    for (int i {1}; i <= 64; i++){ 
         sigaddset(&act.sa_mask,i);
+        /*不能同时执行两个相同的信号处理函数*/
     }
 
     for (int i {1}; i <= 64; i++){
         sigaction(i,&act,nullptr);
+        /*注册信号*/
     }
 
     sigset_t set {};
@@ -44,7 +46,7 @@ int main(int argc,const char* argv[])
 
     for (int i {}; i < 15; i++){
         sleep(1);
-        std::cout << "i = " << i << "\n";
+        std::cout << "i = " << i << "\t";
     }
 
     std::cout << "\n";
@@ -55,12 +57,15 @@ int main(int argc,const char* argv[])
 
     for (int i {}; i < g_index; i++){
 
-        std::cout << "send signum = " << g_sig_arr[i].sig << 
+        std::cout << "received signum = " << g_sig_arr[i].sig << 
             ",send index = " << g_sig_arr[i].index << "\n";
     }
 
-    exit(0);
+    return 0;
 }
+
+
+
 
 #if 0
 //sigfillset(&act.sa_mask);   //屏蔽信号，不让别的信号中断当前信号的处理

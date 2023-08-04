@@ -7,11 +7,12 @@
 #include <fcntl.h>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 
 using namespace std;
 
-#if 1
+#if 0
 #define NLOOP_FOR_ESTIMATION    1000000000UL
 #define NSECS_PER_MSEC  1000000UL
 #define NSECS_PER_SEC   1000000000UL
@@ -30,27 +31,48 @@ static timespec g_time_begin {};
 static unsigned long estimate_loops_per_msec()
 {
     timespec begin{},end{};
+
     clock_gettime(CLOCK_MONOTONIC,&begin);
+
     for(unsigned long i {};i < NLOOP_FOR_ESTIMATION;++i);
+
     clock_gettime(CLOCK_MONOTONIC,&end);
+
     return NLOOP_FOR_ESTIMATION * NSECS_PER_MSEC / DiffNS(begin,end);
 }
 
 static inline void work()
 {
-    for(unsigned int i {};i < g_load_per_slice;++i);
+    for(unsigned long i {};i < g_load_per_slice;++i);
 }
 
 static void test(const int id,timespec* tss,const int nrecord)
 {
-    timespec ts {};
     char buf[128]{};
     int fd {-1};
 
     for (int i {}; i < nrecord; i++){
         work();
+        clock_gettime(CLOCK_MONOTONIC,tss + i);
     }
     
+    sprintf(buf,"./%d-proc.log",id);
+    cout << buf << '\n';
+
+    fd = open(buf,O_WRONLY | O_CREAT | O_TRUNC);
+
+    if (-1 != fd){
+        
+        for (int i {}; i < nrecord; i++){
+            sprintf(buf,"%d\t%ld\t%d\n",
+                        id,
+                        DiffNS(g_time_begin,tss[i]) / NSECS_PER_MSEC,
+                        (i+1) * 100 / nrecord);
+            write(fd,buf,strlen(buf));
+        }
+    }
+    
+    close(fd);
 }
 
 int main(int argc, char const *argv[])
@@ -77,6 +99,8 @@ int main(int argc, char const *argv[])
 
         cout << "Begin estimate work load per slice...\n";
         g_load_per_slice = estimate_loops_per_msec() * slice;
+        /*estimate_loops_per_msec()计算1毫秒循环多少次*/
+        /*slice * estimate_loops_per_msec() = */
         cout << "End ==> g_load_per_slice = " << g_load_per_slice << '\n';
 
         int n {};
@@ -102,7 +126,7 @@ int main(int argc, char const *argv[])
                 cout << "task " << i << " ===> schedule policy: " << sched << '\n';
                 cout << "task " << i << " ===> schedule priority: " << pri << '\n';
 
-                test();
+                test(i,logbuf,nrecord);
 
                 exit(0);
             }else{

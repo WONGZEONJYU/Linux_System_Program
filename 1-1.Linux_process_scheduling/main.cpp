@@ -28,7 +28,7 @@ static constexpr unsigned long NSECS_PER_SEC {1000000000UL};
 static unsigned long g_load_per_slice {};
 static timespec g_time_begin {};
 
-static unsigned long estimate_loops_per_msec()
+static unsigned long estimate_loops_per_msec() /*1ms有多少次循环*/
 {
     timespec begin{},end{};
 
@@ -39,27 +39,30 @@ static unsigned long estimate_loops_per_msec()
     clock_gettime(CLOCK_MONOTONIC,&end);
 
     return NLOOP_FOR_ESTIMATION * NSECS_PER_MSEC / DiffNS(begin,end);
+    /*以下书写可能更容易理解*/
+    /* NLOOP_FOR_ESTIMATION / DiffNS(begin,end) * NSECS_PER_MSEC */
 }
 
 static inline void work()
 {
+    /* g_load_per_slice 每个时间片的循环次数
+    	经过 1 个时间片的循环次数后返回,模拟工作 1 个时间片*/
     for(unsigned long i {};i < g_load_per_slice;++i);
 }
 
 static void test(const int id,timespec* tss,const int nrecord)
 {
-    char buf[128]{};
-    int fd {-1};
-
+	/*nrecord 记录的时间片数,也就是进程要执行的总时间*/
     for (int i {}; i < nrecord; i++){
         work();
         clock_gettime(CLOCK_MONOTONIC,tss + i);
     }
-    
+
+    char buf[128]{};
     sprintf(buf,"./%d-proc.log",id);
     cout << buf << '\n';
 
-    fd = open(buf,O_WRONLY | O_CREAT | O_TRUNC);
+    int fd { open(buf,O_WRONLY | O_CREAT | O_TRUNC) };
 
     if (-1 != fd){
         
@@ -97,21 +100,22 @@ int main(int argc, char const *argv[])
         cout << "SCHED_FIFO = " << SCHED_FIFO << '\n';
         cout << "SCHED_RR = " << SCHED_RR << '\n';
 
+		/*每个时间片的循环次数*/
         cout << "Begin estimate work load per slice...\n";
         g_load_per_slice = estimate_loops_per_msec() * slice;
-        /*estimate_loops_per_msec()计算1毫秒循环多少次*/
-        /*slice * estimate_loops_per_msec() = */
         cout << "End ==> g_load_per_slice = " << g_load_per_slice << '\n';
 
         int n {};
-
+        
+        /*记录起始时间*/
         clock_gettime(CLOCK_MONOTONIC,&g_time_begin);
         
         for (int i {}; i < nproc; i++){
 
             pids[i] = fork();
-
+			
             if (pids[i] < 0){
+                /*某个进程创建失败,杀死所有已经创建的子进程*/
                 int j{};
                 while (j < n){
                     kill(pids[j++],SIGKILL);

@@ -31,16 +31,12 @@ static timespec g_time_begin {};
 static unsigned long estimate_loops_per_msec() /*1ms有多少次循环*/
 {
     timespec begin{},end{};
-
     clock_gettime(CLOCK_MONOTONIC,&begin);
-
     for(unsigned long i {};i < NLOOP_FOR_ESTIMATION;++i);
-
     clock_gettime(CLOCK_MONOTONIC,&end);
-
     return NLOOP_FOR_ESTIMATION * NSECS_PER_MSEC / DiffNS(begin,end);
     /*以下书写可能更容易理解*/
-    /* NLOOP_FOR_ESTIMATION / DiffNS(begin,end) * NSECS_PER_MSEC */
+    /* NLOOP_FOR_ESTIMATION / DiffNS(begin,end) / NSECS_PER_MSEC */
 }
 
 static inline void work()

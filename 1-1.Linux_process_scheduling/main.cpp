@@ -36,7 +36,7 @@ static unsigned long estimate_loops_per_msec() /*1ms有多少次循环*/
     clock_gettime(CLOCK_MONOTONIC,&end);
     return NLOOP_FOR_ESTIMATION * NSECS_PER_MSEC / DiffNS(begin,end);
     /*以下书写可能更容易理解*/
-    /* NLOOP_FOR_ESTIMATION / DiffNS(begin,end) / NSECS_PER_MSEC */
+    /* NLOOP_FOR_ESTIMATION / DiffNS(begin,end) * NSECS_PER_MSEC */
 }
 
 static inline void work()

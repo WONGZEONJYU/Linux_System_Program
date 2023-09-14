@@ -1,0 +1,297 @@
+wong@wong-virtual-machine:~/Linux_System_Program/1-2-1-3.multi-core-scheduling$ taskset -c 0,1,2 ./a.out 20 1000 10
+SCHED_OTHER = 0
+SCHED_FIFO = 1
+SCHED_RR = 2
+Begin ==> estimate work load per slice...
+End ==> g_load_per_slice = 18006460
+nproc = 1 begin
+total = 1000
+slice = 10
+./1-0-proc.log : 654 ms
+nproc = 1 end --> 655ms
+nproc = 2 begin
+total = 1000
+slice = 10
+./2-1-proc.log : 635 ms
+./2-0-proc.log : 641 ms
+nproc = 2 end --> 641ms
+nproc = 3 begin
+total = 1000
+slice = 10
+./3-1-proc.log : 636 ms
+./3-2-proc.log : 637 ms
+./3-0-proc.log : 680 ms
+nproc = 3 end --> 680ms
+nproc = 4 begin
+total = 1000
+slice = 10
+./4-1-proc.log : 630 ms
+./4-0-proc.log : 687 ms
+./4-2-proc.log : 875 ms
+./4-3-proc.log : 1018 ms
+nproc = 4 end --> 1018ms
+nproc = 5 begin
+total = 1000
+slice = 10
+./5-1-proc.log : 630 ms
+./5-0-proc.log : 637 ms
+./5-2-proc.log : 970 ms
+./5-4-proc.log : 1068 ms
+./5-3-proc.log : 1129 ms
+nproc = 5 end --> 1129ms
+nproc = 6 begin
+total = 1000
+slice = 10
+./6-0-proc.log : 632 ms
+./6-1-proc.log : 677 ms
+./6-2-proc.log : 1139 ms
+./6-3-proc.log : 1173 ms
+./6-4-proc.log : 1356 ms
+./6-5-proc.log : 1407 ms
+nproc = 6 end --> 1407ms
+nproc = 7 begin
+total = 1000
+slice = 10
+./7-1-proc.log : 637 ms
+./7-0-proc.log : 637 ms
+./7-4-proc.log : 1183 ms
+./7-3-proc.log : 1228 ms
+./7-2-proc.log : 1405 ms
+./7-5-proc.log : 1549 ms
+./7-6-proc.log : 1581 ms
+nproc = 7 end --> 1581ms
+nproc = 8 begin
+total = 1000
+slice = 10
+./8-1-proc.log : 622 ms
+./8-0-proc.log : 680 ms
+./8-2-proc.log : 1154 ms
+./8-3-proc.log : 1166 ms
+./8-4-proc.log : 1513 ms
+./8-7-proc.log : 1706 ms
+./8-6-proc.log : 1757 ms
+./8-5-proc.log : 1800 ms
+nproc = 8 end --> 1801ms
+nproc = 9 begin
+total = 1000
+slice = 10
+./9-0-proc.log : 652 ms
+./9-1-proc.log : 679 ms
+./9-2-proc.log : 1229 ms
+./9-8-proc.log : 1289 ms
+./9-7-proc.log : 1759 ms
+./9-6-proc.log : 1788 ms
+./9-3-proc.log : 1952 ms
+./9-4-proc.log : 1975 ms
+./9-5-proc.log : 2062 ms
+nproc = 9 end --> 2062ms
+nproc = 10 begin
+total = 1000
+slice = 10
+./10-0-proc.log : 626 ms
+./10-1-proc.log : 671 ms
+./10-6-proc.log : 1258 ms
+./10-7-proc.log : 1316 ms
+./10-4-proc.log : 1757 ms
+./10-3-proc.log : 1784 ms
+./10-5-proc.log : 2090 ms
+./10-8-proc.log : 2105 ms
+./10-2-proc.log : 2147 ms
+./10-9-proc.log : 2285 ms
+nproc = 10 end --> 2285ms
+nproc = 11 begin
+total = 1000
+slice = 10
+./11-0-proc.log : 643 ms
+./11-1-proc.log : 693 ms
+./11-8-proc.log : 1339 ms
+./11-10-proc.log : 1389 ms
+./11-4-proc.log : 1886 ms
+./11-6-proc.log : 1932 ms
+./11-2-proc.log : 2246 ms
+./11-3-proc.log : 2315 ms
+./11-5-proc.log : 2437 ms
+./11-7-proc.log : 2475 ms
+./11-9-proc.log : 2482 ms
+nproc = 11 end --> 2482ms
+nproc = 12 begin
+total = 1000
+slice = 10
+./12-0-proc.log : 689 ms
+./12-1-proc.log : 701 ms
+./12-5-proc.log : 1349 ms
+./12-6-proc.log : 1352 ms
+./12-10-proc.log : 2061 ms
+./12-11-proc.log : 2070 ms
+./12-3-proc.log : 2313 ms
+./12-2-proc.log : 2355 ms
+./12-4-proc.log : 2573 ms
+./12-8-proc.log : 2704 ms
+./12-7-proc.log : 2758 ms
+./12-9-proc.log : 2783 ms
+nproc = 12 end --> 2783ms
+nproc = 13 begin
+total = 1000
+slice = 10
+./13-1-proc.log : 633 ms
+./13-0-proc.log : 633 ms
+./13-5-proc.log : 1275 ms
+./13-6-proc.log : 1310 ms
+./13-10-proc.log : 1954 ms
+./13-11-proc.log : 1987 ms
+./13-4-proc.log : 2375 ms
+./13-7-proc.log : 2413 ms
+./13-2-proc.log : 2588 ms
+./13-8-proc.log : 2747 ms
+./13-3-proc.log : 2751 ms
+./13-12-proc.log : 2791 ms
+./13-9-proc.log : 2971 ms
+nproc = 13 end --> 2972ms
+nproc = 14 begin
+total = 1000
+slice = 10
+./14-0-proc.log : 631 ms
+./14-1-proc.log : 660 ms
+./14-6-proc.log : 1294 ms
+./14-5-proc.log : 1326 ms
+./14-10-proc.log : 1961 ms
+./14-11-proc.log : 2008 ms
+./14-3-proc.log : 2358 ms
+./14-4-proc.log : 2424 ms
+./14-2-proc.log : 2688 ms
+./14-12-proc.log : 2753 ms
+./14-9-proc.log : 2998 ms
+./14-7-proc.log : 3015 ms
+./14-8-proc.log : 3079 ms
+./14-13-proc.log : 3190 ms
+nproc = 14 end --> 3190ms
+nproc = 15 begin
+total = 1000
+slice = 10
+./15-0-proc.log : 629 ms
+./15-1-proc.log : 635 ms
+./15-5-proc.log : 1263 ms
+./15-6-proc.log : 1308 ms
+./15-10-proc.log : 1952 ms
+./15-11-proc.log : 2020 ms
+./15-2-proc.log : 2370 ms
+./15-3-proc.log : 2413 ms
+./15-8-proc.log : 2824 ms
+./15-9-proc.log : 2886 ms
+./15-7-proc.log : 3054 ms
+./15-4-proc.log : 3147 ms
+./15-14-proc.log : 3266 ms
+./15-12-proc.log : 3306 ms
+./15-13-proc.log : 3354 ms
+nproc = 15 end --> 3354ms
+nproc = 16 begin
+total = 1000
+slice = 10
+./16-1-proc.log : 632 ms
+./16-0-proc.log : 685 ms
+./16-8-proc.log : 1275 ms
+./16-9-proc.log : 1375 ms
+./16-13-proc.log : 1975 ms
+./16-14-proc.log : 2032 ms
+./16-7-proc.log : 2529 ms
+./16-6-proc.log : 2540 ms
+./16-12-proc.log : 3059 ms
+./16-15-proc.log : 3104 ms
+./16-10-proc.log : 3300 ms
+./16-5-proc.log : 3468 ms
+./16-2-proc.log : 3524 ms
+./16-11-proc.log : 3529 ms
+./16-3-proc.log : 3641 ms
+./16-4-proc.log : 3665 ms
+nproc = 16 end --> 3665ms
+nproc = 17 begin
+total = 1000
+slice = 10
+./17-1-proc.log : 635 ms
+./17-0-proc.log : 636 ms
+./17-5-proc.log : 1303 ms
+./17-6-proc.log : 1324 ms
+./17-10-proc.log : 1997 ms
+./17-11-proc.log : 2017 ms
+./17-15-proc.log : 2694 ms
+./17-16-proc.log : 2714 ms
+./17-7-proc.log : 3067 ms
+./17-8-proc.log : 3108 ms
+./17-2-proc.log : 3320 ms
+./17-13-proc.log : 3458 ms
+./17-14-proc.log : 3565 ms
+./17-4-proc.log : 3726 ms
+./17-3-proc.log : 3784 ms
+./17-9-proc.log : 3794 ms
+./17-12-proc.log : 3805 ms
+nproc = 17 end --> 3805ms
+nproc = 18 begin
+total = 1000
+slice = 10
+./18-0-proc.log : 637 ms
+./18-1-proc.log : 642 ms
+./18-5-proc.log : 1311 ms
+./18-6-proc.log : 1339 ms
+./18-10-proc.log : 1992 ms
+./18-12-proc.log : 2024 ms
+./18-16-proc.log : 2620 ms
+./18-17-proc.log : 2652 ms
+./18-8-proc.log : 3099 ms
+./18-7-proc.log : 3107 ms
+./18-13-proc.log : 3512 ms
+./18-14-proc.log : 3515 ms
+./18-3-proc.log : 3670 ms
+./18-4-proc.log : 3759 ms
+./18-2-proc.log : 3921 ms
+./18-9-proc.log : 4010 ms
+./18-15-proc.log : 4021 ms
+./18-11-proc.log : 4043 ms
+nproc = 18 end --> 4044ms
+nproc = 19 begin
+total = 1000
+slice = 10
+./19-1-proc.log : 635 ms
+./19-0-proc.log : 636 ms
+./19-6-proc.log : 1301 ms
+./19-5-proc.log : 1331 ms
+./19-11-proc.log : 1982 ms
+./19-13-proc.log : 2029 ms
+./19-17-proc.log : 2623 ms
+./19-18-proc.log : 2674 ms
+./19-8-proc.log : 3110 ms
+./19-7-proc.log : 3153 ms
+./19-14-proc.log : 3504 ms
+./19-16-proc.log : 3615 ms
+./19-4-proc.log : 3718 ms
+./19-2-proc.log : 3867 ms
+./19-15-proc.log : 4005 ms
+./19-3-proc.log : 4099 ms
+./19-10-proc.log : 4104 ms
+./19-9-proc.log : 4293 ms
+./19-12-proc.log : 4323 ms
+nproc = 19 end --> 4323ms
+nproc = 20 begin
+total = 1000
+slice = 10
+./20-0-proc.log : 684 ms
+./20-1-proc.log : 696 ms
+./20-8-proc.log : 1331 ms
+./20-7-proc.log : 1344 ms
+./20-12-proc.log : 2033 ms
+./20-13-proc.log : 2033 ms
+./20-18-proc.log : 2715 ms
+./20-17-proc.log : 2717 ms
+./20-5-proc.log : 3210 ms
+./20-4-proc.log : 3211 ms
+./20-10-proc.log : 3665 ms
+./20-11-proc.log : 3694 ms
+./20-2-proc.log : 3998 ms
+./20-16-proc.log : 4193 ms
+./20-19-proc.log : 4209 ms
+./20-14-proc.log : 4329 ms
+./20-9-proc.log : 4374 ms
+./20-3-proc.log : 4390 ms
+./20-6-proc.log : 4432 ms
+./20-15-proc.log : 4623 ms
+nproc = 20 end --> 4624ms
+wong@wong-virtual-machine:~/Linux_System_Program/1-2-1-3.multi-core-scheduling$ 

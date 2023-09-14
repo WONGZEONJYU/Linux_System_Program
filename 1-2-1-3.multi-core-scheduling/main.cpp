@@ -56,10 +56,9 @@ static void test(const int ep, const int id, const int nrecord)
 
     clock_gettime(CLOCK_MONOTONIC,&ts);
 
-    sprintf(buf,"./%d-%d-proc.log",ep,id);
+    sprintf(buf,"./%d-%d-proc.log : ",ep,id);
 
-    cout << buf << (DiffNS(g_time_begin,ts) / NSECS_PER_MSEC) << '\n';
-
+    cout << buf << (DiffNS(g_time_begin,ts) / NSECS_PER_MSEC) << " ms\n";
 }
 
 static void epoch(const int nproc,int total,const int slice)
@@ -70,14 +69,14 @@ static void epoch(const int nproc,int total,const int slice)
 
     if (pids){
         
-        cout << "nproc = " << nproc << '\n';
+        cout << "nproc = " << nproc << " begin\n";
         cout << "total = " << total << '\n';
         cout << "slice = " << slice << '\n';
-        int n{};
-        timespec ts {};
-        /*记录起始时间*/
-        clock_gettime(CLOCK_MONOTONIC,&g_time_begin);
 
+        timespec ts {};
+        clock_gettime(CLOCK_MONOTONIC,&g_time_begin);/*记录起始时间*/
+
+        int n{};
         for (int i {}; i < nproc; i++){
             
             pids[i] = fork();
@@ -87,6 +86,7 @@ static void epoch(const int nproc,int total,const int slice)
                 break;
             }else if (0 == pids[i]){
                 test(nproc,i,nrecord);
+                exit(0);
             }else{
                 ++n;
             }
@@ -98,7 +98,8 @@ static void epoch(const int nproc,int total,const int slice)
 
         clock_gettime(CLOCK_MONOTONIC,&ts);
 
-        cout << "nproc = " << nproc << " end -->" << (DiffNS(g_time_begin,ts) / NSECS_PER_MSEC);
+        cout << "nproc = " << nproc << 
+                " end --> " << (DiffNS(g_time_begin,ts) / NSECS_PER_MSEC) << "ms\n";
     }
 
     free(pids);

@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <iostream>
+#include <sched.h>
 
 using namespace std;
 
@@ -31,37 +32,48 @@ static auto get_nice()
 
 int main(int argc, char* argv[])
 {
-    const auto pid {fork()};
-
     sched_param sp{};
 
-    if (pid > 0){
-
-        cout << "child = " << getpid() << 
+    cout << "child = " << getpid() << 
             ", ppid = " << getppid() << 
             ", pgid = " << getpgrp() << '\n';
 
-        if (set_nice(0)){
+    sp.sched_priority = 2;
+
+    if (-1 == sched_setscheduler(0,SCHED_RR,&sp) ){
+        cerr << "set policy error ===> "  << __LINE__ << "\n";
+    }
+
+    int pid {};
+    if ((pid = fork()) > 0){
+
+        if (set_nice(2)){
             heavy_work();
         }else {
-            cerr << "set nice_value failed...\n";
+            cerr << "set nice_value failed ===> " << __LINE__ << "\n";
         }
 
     }else if(!pid){
-        
+
         cout << "child = " << getpid() << 
             ", ppid = " << getppid() << 
             ", pgid = " << getpgrp() << '\n';
+
+        sp.sched_priority = 5;
+
+        if (-1 == sched_setscheduler(0,SCHED_RR,&sp) ){
+            cerr << "set policy error ===> "  << __LINE__ << "\n";
+        }
 
         if (set_nice(5)){
             heavy_work();
         }else {
-            cerr << "set nice_value failed...\n";
+            cerr << "set nice_value failed ===> " << __LINE__ << "\n";
         }
 
     }else {
         cerr << "child process create failed...\n";
     }
-    
+
     return 0;
 }

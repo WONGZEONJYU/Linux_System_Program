@@ -44,8 +44,9 @@ int main(int argc, char* argv[])
         cerr << "set policy error ===> "  << __LINE__ << "\n";
     }
 
-    int pid {};
-    if ((pid = fork()) > 0){
+    const auto pid {fork()};
+
+    if (pid > 0){
 
         if (set_nice(2)){
             heavy_work();

@@ -44,7 +44,7 @@ class MySignal
     void reg_signal(const int sig,const int flags);
 
     template<typename Fn,typename... Args>
-    void init(const int sig,Fn&& fn,Args&& ...args){
+    void init(Fn&& fn,Args&& ...args){
         auto t {__make_invoker(std::forward<Fn>(fn),std::forward<Args>(args)...)};
         auto _sp_t {_S_make_state(t)};
         m_hander_ = std::move(_sp_t);
@@ -53,7 +53,7 @@ class MySignal
     template<typename Fn,typename... Args>
     explicit MySignal(const int sig,const int flags,Fn&& fn,Args&& ...args):m_sig_(sig){
         reg_signal(sig,flags);
-        init(sig,std::forward<Fn>(fn),std::forward<Args>(args)...);
+        init(std::forward<Fn>(fn),std::forward<Args>(args)...);
     }
 
     //MySignal() = default;
@@ -75,7 +75,9 @@ public:
     MySignal& operator=(MySignal&&);
 
     static int sig(int);
+    int sig();
     static siginfo_t siginfo(int);
+    siginfo_t siginfo();
 
 private:
 
@@ -110,8 +112,8 @@ private:
 
 private:
     int m_sig_{};
-    siginfo_t m_info_{};
     struct sigaction m_act_{};
+    siginfo_t m_info_{};
     _sp_base_type m_hander_{};
     static std::map<int,_sp_MySignal_type> sm_map_;
 };

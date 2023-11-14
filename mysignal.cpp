@@ -50,12 +50,20 @@ namespace wtd {
         return -1;
     }
 
+    int MySignal::sig(){
+        return m_sig_;
+    }
+
     siginfo_t MySignal::siginfo(int index){
 
         if (sm_map_.find(index) != sm_map_.end()){
             return sm_map_[index]->m_info_;
         }
         return {};
+    }
+
+    siginfo_t MySignal::siginfo(){
+        return m_info_;
     }
 
     void MySignal::signal_handler(const int sig,siginfo_t* info,void*) {
@@ -74,8 +82,7 @@ namespace wtd {
         }
     }
 
-
-    void MySignal::signal_proxy(void* arg){
+    void MySignal::signal_proxy(void* ){
         
     }
 }

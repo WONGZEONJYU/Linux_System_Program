@@ -180,13 +180,16 @@ static int test4(char const *argv[])
         cerr << dst_file <<" file open error...\n";
         return -1;
     }
-        constexpr auto B_SIZE{4};
-        int buf[B_SIZE]{};
 
+        
     for (;;){
 
-        const auto rbytes {fread(buf,sizeof(buf),B_SIZE,src_f)};
-        cout << rbytes << "\n";
+        constexpr auto B_SIZE{64};
+        int buf[B_SIZE]{};
+        constexpr auto type_size{sizeof(*buf)};
+
+        const auto rbytes {fread(buf,type_size,B_SIZE,src_f)};
+        
         if ((!rbytes) || (rbytes < B_SIZE)){
 
             if (errno){
@@ -197,7 +200,7 @@ static int test4(char const *argv[])
             }
         }
 
-        const auto wbytes{fwrite(buf,sizeof(buf),B_SIZE,dst_f)};
+        const auto wbytes{fwrite(buf,type_size,B_SIZE,dst_f)};
         if ((!wbytes) || (wbytes < B_SIZE)){
             if (errno){
                 cerr << "write error...\n";

@@ -3,7 +3,6 @@
 
 #include <tuple>
 #include <unordered_map>
-//#include <map>
 #include <memory>
 #include <type_traits>
 #include <signal.h>
@@ -95,9 +94,10 @@ public:
     [[nodiscard]] static const _sp_MySignal_type Create(const int sig,const int flags,
                                                 Fn&& fn,Args&& ...args){
         
-        const auto r {_sp_MySignal_type(new MySignal(sig,flags,std::forward<Fn>(fn),std::forward<Args>(args)...))};
-        sm_map_.insert({sig,r});
-        return r;
+        const auto ret {_sp_MySignal_type(new MySignal(sig,flags,
+                    std::forward<Fn>(fn),std::forward<Args>(args)...))};
+        sm_map_.insert({sig,ret});
+        return ret;
     }
 
     ~MySignal();
@@ -119,6 +119,5 @@ private:
 };
 
 }
-
 
 #endif

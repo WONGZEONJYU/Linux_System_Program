@@ -5,9 +5,9 @@
 
 namespace wtd {
 
-    std::unordered_map<int,MySignal::_sp_MySignal_type> MySignal::sm_map_;
+    std::unordered_map<int, MySignal::_sp_MySignal_type> MySignal::sm_map_;
 
-    MySignal::MySignal(const int sig,const int flags):m_sig_(sig){
+    MySignal::MySignal(const int sig,const int flags):m_sig_{sig}{
 
         m_act_.sa_sigaction = signal_handler;
         m_act_.sa_flags = SA_SIGINFO | flags;

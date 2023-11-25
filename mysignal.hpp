@@ -1,6 +1,7 @@
 #ifndef MY_SIGNAL_H
 #define MY_SIGNAL_H
 
+
 #include <tuple>
 #include <unordered_map>
 #include <memory>
@@ -115,7 +116,7 @@ private:
     struct sigaction m_act_{};
     siginfo_t m_info_{};
     _sp_base_type m_hander_{};
-    static std::unordered_map<int,_sp_MySignal_type> sm_map_;
+    static inline std::unordered_map<int,_sp_MySignal_type> sm_map_;
 };
 
 }

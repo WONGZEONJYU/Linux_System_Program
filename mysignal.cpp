@@ -1,11 +1,7 @@
-#include "mysignal.hpp"
-#include <memory>
 #include <cstring>
-#include <iostream>
+#include "mysignal.hpp"
 
 namespace wtd {
-
-    std::unordered_map<int, MySignal::_sp_MySignal_type> MySignal::sm_map_;
 
     MySignal::MySignal(const int sig,const int flags):m_sig_{sig}{
 
@@ -84,5 +80,4 @@ namespace wtd {
         }
     }
 }
-
 

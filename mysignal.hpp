@@ -1,7 +1,6 @@
 #ifndef MY_SIGNAL_H
 #define MY_SIGNAL_H
 
-
 #include <tuple>
 #include <unordered_map>
 #include <memory>
@@ -15,8 +14,7 @@ class MySignal
 {
     MySignal(const MySignal&) = delete;
     MySignal& operator=(const MySignal&) = delete;
-    void SWap(MySignal&& );
-
+    
     struct _Base{
         virtual void func() = 0;
         virtual ~_Base() = default;
@@ -103,9 +101,6 @@ public:
 
     ~MySignal();
 
-    MySignal(MySignal&&);
-    MySignal& operator=(MySignal&&);
-
     static int sig(int) ;
     int sig()const ;
     static siginfo_t siginfo(int);
@@ -116,7 +111,7 @@ private:
     struct sigaction m_act_{};
     siginfo_t m_info_{};
     _sp_base_type m_hander_{};
-    static inline std::unordered_map<int,_sp_MySignal_type> sm_map_;
+    inline static std::unordered_map<int,_sp_MySignal_type> sm_map_;
 };
 
 }

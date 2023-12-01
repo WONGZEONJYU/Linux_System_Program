@@ -10,6 +10,8 @@ namespace wtd {
         sigaction (sig, &m_act_,nullptr);
     }
 
+    MySignal::~MySignal(){}
+
     int MySignal::sig(const int index){
 
         if (sm_map_.find(index) != sm_map_.end()){

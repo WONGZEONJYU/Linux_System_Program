@@ -55,7 +55,6 @@ class MySignal
             using _Indices = typename std::_Build_index_tuple<std::tuple_size<_Tuple>::value>::__type;
             return _M_invoke(_Indices());
         }
-
     };
 
     template<typename... _Tp>
@@ -96,7 +95,7 @@ public:
         return ret;
     }
 
-    ~MySignal() = default;
+    ~MySignal();
 
     static int sig(int) ;
     int sig()const ;

@@ -6,7 +6,6 @@
 #include "sem_.hpp"
 #include <mutex>
 
-
 using namespace std;
 
 void Sem::_Move(Sem&& obj)

@@ -15,7 +15,7 @@ void foo()
 {
     cout << __FUNCTION__ << " begin\n";
     cout << "I'm " << __FUNCTION__ << "\n" << flush;
-    //pthread_exit(nullptr);
+    pthread_exit(nullptr);
     cout << __FUNCTION__ << " end\n";
 }
 
@@ -25,7 +25,7 @@ void* thread_entry(void* arg)
 
     foo();
 
-    pthread_cleanup_pop(1);
+    pthread_cleanup_pop(0);
 
     return nullptr;
 }

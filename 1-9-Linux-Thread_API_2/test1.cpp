@@ -1,10 +1,7 @@
 #include <iostream>
 #include <thread>
-#include <cstring>
 
 using namespace std;
-using namespace chrono;
-using namespace this_thread;
 
 void clean_test(void* arg)
 {
@@ -22,12 +19,9 @@ void foo()
 void* thread_entry(void* arg)
 {
     pthread_cleanup_push(clean_test,reinterpret_cast<void*>(111));
-
     foo();
-
     pthread_cleanup_pop(0);
-
-    return nullptr;
+    return 0;
 }
 
 int main(int argc, char const *argv[])

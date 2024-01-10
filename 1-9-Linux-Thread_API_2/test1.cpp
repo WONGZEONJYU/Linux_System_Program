@@ -21,7 +21,7 @@ void* thread_entry(void* arg)
     pthread_cleanup_push(clean_test,reinterpret_cast<void*>(111));
     foo();
     pthread_cleanup_pop(0);
-    return 0;
+    return nullptr;
 }
 
 int main(int argc, char const *argv[])

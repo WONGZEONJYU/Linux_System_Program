@@ -21,7 +21,7 @@ void* thread_entry(void* arg)
     pthread_cleanup_push(clean_test,reinterpret_cast<void*>(111));
     foo();
     if (i)
-        pthread_cleanup_pop(0);/*为什么清理函数还会被执行?*/
+        pthread_cleanup_pop(0);/*为什么清理函数还会被执行?请查看源码就懂了!*/
     return nullptr;
 }
 

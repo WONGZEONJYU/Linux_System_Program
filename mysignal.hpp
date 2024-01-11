@@ -26,7 +26,7 @@ class MySignal
     struct _Base_impl:public _Base {
         _Callable _S_handler;
         _Base_impl(_Callable&& __f):_S_handler(std::forward<_Callable>(__f)){}
-        void func() override{
+        void func() override {
             _S_handler();
         }
     };
@@ -55,7 +55,6 @@ class MySignal
             using _Indices = typename std::_Build_index_tuple<std::tuple_size<_Tuple>::value>::__type;
             return _M_invoke(_Indices());
         }
-
     };
 
     template<typename... _Tp>
@@ -81,20 +80,17 @@ class MySignal
         init(std::forward<Fn>(fn),std::forward<Args>(args)...);
     }
 
-    MySignal(const int sig,const int flags);
-
-    MySignal() = delete;
+    explicit MySignal(const int sig,const int flags);
 
 public:
-    
     using _sp_MySignal_type = std::shared_ptr<MySignal>;
 
     template<typename Fn,typename... Args>
     [[nodiscard]] static const _sp_MySignal_type Create(const int sig,const int flags,
                                                 Fn&& fn,Args&& ...args){
         
-        const auto ret {_sp_MySignal_type(new MySignal(sig,flags,
-                    std::forward<Fn>(fn),std::forward<Args>(args)...))};
+        const _sp_MySignal_type ret (new MySignal(sig,flags,
+                    std::forward<Fn>(fn),std::forward<Args>(args)...));
         sm_map_.insert({sig,ret});
         return ret;
     }
@@ -111,7 +107,7 @@ private:
     struct sigaction m_act_{};
     siginfo_t m_info_{};
     _sp_base_type m_hander_{};
-    inline static std::unordered_map<int,_sp_MySignal_type> sm_map_;
+    static inline std::unordered_map<int,_sp_MySignal_type> sm_map_;
 };
 
 }

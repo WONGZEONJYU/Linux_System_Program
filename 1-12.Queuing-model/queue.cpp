@@ -1,33 +1,28 @@
-#include <pthread.h>
+#include <thread>
 #include <exception>
 #include <iostream>
 #include <atomic>
 #include "queue.hpp"
 
 struct TQueue{
-    ListNode head;
-    pthread_mutex_t mutex;
-    //int length;
-    std::atomic<int> length;
+    ListNode head{};
+    pthread_mutex_t mutex{};
+    std::atomic<int> length{};
 };
 
 Queue Queue_Create()
 {
     TQueue *ret{};
     try{
-        ret = new TQueue();
-    }
-    catch(const std::bad_alloc& e){
-        std::cerr << e.what() << '\n';
-        ret = nullptr;
-    }
-
-    if( ret ){
+        ret = new TQueue;
         pthread_mutexattr_t attr {};
         pthread_mutexattr_init(&attr);
         pthread_mutex_init(&ret->mutex, &attr);
         List_Init(reinterpret_cast<List*>(ret));
         ret->length.store(0);
+    }catch(const std::bad_alloc& e){
+        std::cerr << e.what() << '\n';
+        ret = nullptr;
     }
 
     return ret;
@@ -81,9 +76,9 @@ void Queue_Add(Queue queue, QueueNode* node)
     
     List_AddTail(reinterpret_cast<List*>(q), node);
     
-    ++q->length;
-    
     pthread_mutex_unlock(&q->mutex);
+
+    ++q->length;
 }
 
 QueueNode* Queue_Front(Queue queue)
@@ -104,16 +99,14 @@ QueueNode* Queue_Remove(Queue queue)
     auto q {static_cast<TQueue*>(queue)};
     QueueNode* ret {};
  
-    pthread_mutex_lock(&q->mutex);
-    
     if( q->length > 0 ){
+        pthread_mutex_lock(&q->mutex);
         ret = q->head.next;
         List_DelNode(ret);
+        pthread_mutex_unlock(&q->mutex);
         --q->length;
     }
-    
-    pthread_mutex_unlock(&q->mutex);
-    
+
     return ret;
 }
 
@@ -121,11 +114,11 @@ int Queue_Length(Queue queue)
 {
     auto q {static_cast<TQueue*>(queue)};
     
-    pthread_mutex_lock(&q->mutex);
+    //pthread_mutex_lock(&q->mutex);
     
-    const auto ret {q->length};
+    const auto ret {q->length.load()};
     
-    pthread_mutex_unlock(&q->mutex);
+    //pthread_mutex_unlock(&q->mutex);
     
     return ret;
 }
@@ -134,13 +127,13 @@ void Queue_Rotate(Queue queue)
 {
     auto q {static_cast<TQueue*>(queue)};
     
-    pthread_mutex_lock(&q->mutex);
+    //pthread_mutex_lock(&q->mutex);
     
     if( q->length > 0 ){
         auto node {Queue_Remove(q)};
         Queue_Add(q, node);
     }
 
-    pthread_mutex_unlock(&q->mutex);
+    //pthread_mutex_unlock(&q->mutex);
 }
 

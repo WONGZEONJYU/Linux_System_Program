@@ -127,13 +127,10 @@ void Queue_Rotate(Queue queue)
 {
     auto q {static_cast<TQueue*>(queue)};
     
-    //pthread_mutex_lock(&q->mutex);
-    
     if( q->length > 0 ){
         auto node {Queue_Remove(q)};
         Queue_Add(q, node);
     }
 
-    //pthread_mutex_unlock(&q->mutex);
 }
 

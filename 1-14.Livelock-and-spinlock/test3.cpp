@@ -13,15 +13,15 @@ void* thread_1(void*)
 {
     for(;;){
 
-        pthread_spin_lock(&g_spin);
-        //pthread_mutex_lock(&g_mutex);
+        //pthread_spin_lock(&g_spin);
+        pthread_mutex_lock(&g_mutex);
 
         cout << __FUNCTION__ << " : " << g_count++ << "\n" << flush;
 
         sleep_for(100ms);
 
-        pthread_spin_unlock(&g_spin);
-        //pthread_mutex_unlock(&g_mutex);
+        //pthread_spin_unlock(&g_spin);
+        pthread_mutex_unlock(&g_mutex);
     }
 
     pthread_detach(pthread_self());
@@ -32,15 +32,15 @@ void* thread_2(void*)
 {
     for(;;){
 
-        pthread_spin_lock(&g_spin);
-        //pthread_mutex_lock(&g_mutex);
+        //pthread_spin_lock(&g_spin);
+        pthread_mutex_lock(&g_mutex);
 
         cout << __FUNCTION__ << " : " << g_count++ << "\n" << flush;
 
         sleep_for(100ms);
 
-        pthread_spin_unlock(&g_spin);
-        //pthread_mutex_unlock(&g_mutex);
+        //pthread_spin_unlock(&g_spin);
+        pthread_mutex_unlock(&g_mutex);
     }
     pthread_detach(pthread_self());
     return nullptr;
@@ -51,6 +51,7 @@ int main(int argc, char const *argv[])
     pthread_mutexattr_t mattr{};
     pthread_mutexattr_init(&mattr);
     pthread_mutex_init(&g_mutex, &mattr);
+    pthread_mutexattr_settype(&mattr, PTHREAD_MUTEX_ADAPTIVE_NP);
 
     pthread_spin_init(&g_spin,PTHREAD_PROCESS_PRIVATE);
     pthread_t t{};

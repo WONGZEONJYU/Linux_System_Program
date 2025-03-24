@@ -10,11 +10,10 @@
 
 namespace wtd {
 
-class MySignal
-{
-    MySignal(const MySignal&) = delete;
-    MySignal& operator=(const MySignal&) = delete;
-    
+class MySignal final{
+
+    static void signal_handler(int,siginfo_t* ,void*);
+
     struct _Base{
         virtual void func() = 0;
         virtual ~_Base() = default;
@@ -32,17 +31,17 @@ class MySignal
     };
 
     template<typename _Callable>
-    static _sp_base_type _S_make_state(_Callable&& __f) {
+    static inline _sp_base_type _S_make_state(_Callable&& __f) {
         using _Impl = _Base_impl<_Callable>;
         return _sp_base_type{new _Impl{std::forward<_Callable>(__f)}};
     }
 
     template<typename _Tuple>
-    struct _Invoker {
-	    _Tuple _M_t;
-
+    class _Invoker {
+        public:
+        _Tuple _M_t{};
         template<typename> struct __result;
-        
+
         template<typename _Fn, typename... _Args>
         struct __result<std::tuple<_Fn, _Args...>> : std::__invoke_result<_Fn, _Args...>{ };
 
@@ -53,7 +52,7 @@ class MySignal
 
         typename __result<_Tuple>::type operator()() {
             using _Indices = typename std::_Build_index_tuple<std::tuple_size<_Tuple>::value>::__type;
-            return _M_invoke(_Indices());
+            return _M_invoke(_Indices{});
         }
     };
 
@@ -61,46 +60,59 @@ class MySignal
     using __decayed_tuple = std::tuple<typename std::decay<_Tp>::type...>;
 
     template<typename _Callable, typename... _Args>
-    static _Invoker<__decayed_tuple<_Callable, _Args...>> __make_invoker(_Callable&& __callable, _Args&&... __args) {
-        return { __decayed_tuple<_Callable, _Args...>{std::forward<_Callable>(__callable), std::forward<_Args>(__args)...} };
+    static inline _Invoker<__decayed_tuple<_Callable, _Args...>> __make_invoker(_Callable&& __callable, _Args&&... __args) {
+#if 0
+        __decayed_tuple<_Callable, _Args...> dt{std::forward<_Callable>(__callable), std::forward<_Args>(__args)...};
+        //_Invoker<__decayed_tuple<_Callable, _Args...>> invoker{dt};
+        _Invoker<decltype(dt)> invoker{std::move(dt)};
+        return invoker;
+#else
+        return { __decayed_tuple<_Callable, _Args...>{
+            std::forward<_Callable>(__callable), std::forward<_Args>(__args)...} };
+#endif
     }
 
-    static void signal_handler(int,siginfo_t* ,void*);
-
     template<typename Fn,typename... Args>
-    void init(Fn&& fn,Args&& ...args){
+    inline void init(Fn&& fn,Args&& ...args){
         auto _invoker {__make_invoker(std::forward<Fn>(fn),std::forward<Args>(args)...)};
-        auto _sp_t {_S_make_state(std::forward<decltype(_invoker)>(_invoker))};
-        m_hander_ = std::move(_sp_t);
+        m_hander_ = _S_make_state(std::forward<decltype(_invoker)>(_invoker));
     }
 
     template<typename Fn,typename... Args>
-    explicit MySignal(const int sig,const int flags,Fn&& fn,Args&& ...args):
+    explicit MySignal(const int &sig,const int &flags,Fn&& fn,Args&& ...args):
             MySignal(sig,flags){
         init(std::forward<Fn>(fn),std::forward<Args>(args)...);
     }
 
-    explicit MySignal(const int sig,const int flags);
+    explicit MySignal(const int &,const int &);
 
 public:
     using _sp_MySignal_type = std::shared_ptr<MySignal>;
 
     template<typename Fn,typename... Args>
-    [[nodiscard]] static const _sp_MySignal_type Create(const int sig,const int flags,
+    [[nodiscard]] static const _sp_MySignal_type Register(const int &sig,const int &flags,
                                                 Fn&& fn,Args&& ...args){
-        
+#if 0
+        if (sm_map_.find(sig) != sm_map_.end()){
+            return {};
+        }
+
         const _sp_MySignal_type ret (new MySignal(sig,flags,
                     std::forward<Fn>(fn),std::forward<Args>(args)...));
-        sm_map_.insert({sig,ret});
+        sm_map_.emplace({sig,ret});
         return ret;
+#else
+        const auto res{sm_map_.try_emplace(sig,_sp_MySignal_type(new MySignal(sig,flags,
+            std::forward<Fn>(fn),std::forward<Args>(args)...)))};
+        return res.second ? res.first->second : _sp_MySignal_type{};
+#endif
     }
 
-    ~MySignal();
-
-    static int sig(int) ;
-    int sig()const ;
-    static siginfo_t siginfo(int);
-    siginfo_t siginfo() const;
+    void Unregister();
+    static int sig(const int&);
+    inline auto sig() const {return m_sig_;}
+    static siginfo_t siginfo(const int&);
+    inline auto siginfo() const{return m_info_;}
 
 private:
     int m_sig_{};
@@ -108,6 +120,13 @@ private:
     siginfo_t m_info_{};
     _sp_base_type m_hander_{};
     static inline std::unordered_map<int,_sp_MySignal_type> sm_map_;
+
+public:
+    MySignal(const MySignal&) = delete;
+    MySignal(MySignal&&) = delete;
+    MySignal& operator=(const MySignal&) = delete;
+    MySignal& operator=(MySignal&&) = delete;
+    ~MySignal() = default;
 };
 
 }

@@ -1,7 +1,6 @@
+#include <unistd.h>
 #include <string>
 #include <sstream>
-#include <unistd.h>
-#include <signal.h>
 #include "mysignal.hpp"
 
 namespace wtd {
@@ -30,8 +29,8 @@ namespace wtd {
         sm_map_.erase(m_sig_);
     }
 
-    void MySignal::signal_handler(const int sig,siginfo_t* const info,void*) {
-
+    void MySignal::signal_handler(const int sig,siginfo_t* const info,void*ctx) {
+        
         const auto res{sm_map_.find(sig)};
 
         if (sm_map_.end() == res || !res->second || !res->second->m_hander_){
@@ -41,6 +40,7 @@ namespace wtd {
             return;
         }
 
+        res->second->m_context_ = ctx;
         res->second->m_sig_ = sig;
         res->second->m_info_ = *info;
         res->second->m_hander_->func();

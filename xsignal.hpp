@@ -93,18 +93,18 @@ public:
     template<typename Fn,typename... Args>
     [[nodiscard]] static auto Register(const int &sig,const int &flags,
                                                 Fn&& fn,Args&& ...args){
-        const auto res{sm_map_.try_emplace(sig,new XSignal(sig,flags,
+        const auto &res{sm_map_.try_emplace(sig,new XSignal(sig,flags,
             std::forward<Fn>(fn),std::forward<Args>(args)...))};
         return res.second ? res.first->second : _sp_MySignal_type{};
     }
 
     void Unregister();
     static int sig(const int&);
-    [[nodiscard]] inline auto sig() const {return m_sig_;}
+    [[nodiscard]] inline auto sig() const{return m_sig_;}
     static siginfo_t siginfo(const int&);
     [[nodiscard]] inline auto siginfo() const{return m_info_;}
     static auto Send_signal(const __pid_t &pid_,const int &sig_,const sigval &val_){
-        return !sigqueue (pid_,sig_,val_);
+        return !sigqueue(pid_,sig_,val_);
     }
 
     [[nodiscard]] auto context() const{

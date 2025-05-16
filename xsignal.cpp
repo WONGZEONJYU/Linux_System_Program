@@ -18,7 +18,7 @@ namespace xtd {
     }
 
     siginfo_t XSignal::siginfo(const int &sig){
-        const auto res{sm_map_.find(sig)};
+        const auto &res{sm_map_.find(sig)};
         return res != sm_map_.end() ? res->second->m_info_ : siginfo_t{};
     }
 
@@ -31,12 +31,11 @@ namespace xtd {
 
     void XSignal::signal_handler(const int sig,siginfo_t* const info,void*ctx) {
         
-        const auto res{sm_map_.find(sig)};
-
+        const auto &res{sm_map_.find(sig)};
         if (sm_map_.end() == res || !res->second || !res->second->m_call_){
             std::stringstream msg;
             msg << "This signal(id: " << sig << ")" << "is not registered\n";
-            write(STDERR_FILENO, msg.str().c_str(),msg.str().length());
+            write(STDERR_FILENO,msg.str().c_str(),msg.str().length());
             return;
         }
 

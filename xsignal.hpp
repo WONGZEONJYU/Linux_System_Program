@@ -28,14 +28,14 @@ class XSignal final{
     class Base_impl_:public Base_ {
         Callable_ m_S_handler_{};
         public:
-        explicit Base_impl_(Callable_&& f):Callable_(std::forward<Callable_>(f)){}
+        explicit Base_impl_(Callable_&& f):m_S_handler_{std::forward<Callable_>(f)}{}
         void func() override {
             m_S_handler_();
         }
     };
 
     template<typename Callable_>
-    static inline auto S_make_state_(Callable_&& f){
+    static inline auto make_call_(Callable_&& f){
         using Impl_ = Base_impl_<Callable_>;
         return std::make_shared<Impl_>(std::forward<Callable_>(f));
     }
@@ -46,7 +46,7 @@ class XSignal final{
         template<typename> struct result_{};
 
         template<typename Fn_, typename... Args_>
-        struct result_<std::tuple<Fn_, Args_...>> : std::__invoke_result<Fn_, Args_...>{ };
+        struct result_<std::tuple<Fn_, Args_...>> : std::invoke_result<Fn_, Args_...>{ };
 
         template<size_t... Ind_>
         typename result_<Tuple_>::type M_invoke_(std::_Index_tuple<Ind_...>) {
@@ -54,7 +54,7 @@ class XSignal final{
         }
 
         public:
-        explicit Invoker(Tuple_ &&t):m_M_t{std::forward<Tuple_>(t)}{}
+        Invoker(Tuple_ &&t):m_M_t{std::forward<Tuple_>(t)}{}
         typename result_<Tuple_>::type operator()() {
             using Indices_ = typename std::_Build_index_tuple<std::tuple_size_v<Tuple_>>::__type;
             return M_invoke_(Indices_{});
@@ -75,8 +75,8 @@ class XSignal final{
 
     template<typename Fn,typename... Args>
     inline void init(Fn&& fn,Args&& ...args){
-        auto _invoker {__make_invoker(std::forward<Fn>(fn),std::forward<Args>(args)...)};
-        m_call_ = std::move(_S_make_state(std::forward<decltype(_invoker)>(_invoker)));
+        auto invoker_ {make_invoker_(std::forward<Fn>(fn),std::forward<Args>(args)...)};
+        m_call_ = std::move(make_call_(std::forward<decltype(invoker_)>(invoker_)));
     }
 
     template<typename Fn,typename... Args>
@@ -98,7 +98,7 @@ public:
         return res.second ? res.first->second : _sp_MySignal_type{};
     }
 
-    void Unregister();
+    //void Unregister();
     static int sig(const int&);
     [[nodiscard]] inline auto sig() const{return m_sig_;}
     static siginfo_t siginfo(const int&);
@@ -126,7 +126,7 @@ public:
     XSignal(XSignal&&) = delete;
     XSignal& operator=(const XSignal&) = delete;
     XSignal& operator=(XSignal&&) = delete;
-    ~XSignal();
+    ~XSignal() = default;
 };
 
 using _sp_MySignal_type = std::shared_ptr<XSignal>;

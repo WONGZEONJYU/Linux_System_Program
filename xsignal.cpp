@@ -22,12 +22,12 @@ namespace xtd {
         return res != sm_map_.end() ? res->second->m_info_ : siginfo_t{};
     }
 
-    void XSignal::Unregister(){
-        m_act_.sa_handler = SIG_DFL;
-        m_act_.sa_flags = 0;
-        sigaction(m_sig_, &m_act_,{});
-        sm_map_.erase(m_sig_);
-    }
+    // void XSignal::Unregister(){
+    //     m_act_.sa_handler = SIG_DFL;
+    //     m_act_.sa_flags = 0;
+    //     sigaction(m_sig_, &m_act_,{});
+    //     sm_map_.erase(m_sig_);
+    // }
 
     void XSignal::signal_handler(const int sig,siginfo_t* const info,void*ctx) {
         
@@ -45,10 +45,10 @@ namespace xtd {
         res->second->m_call_->func();
     }
 
-    XSignal::~XSignal(){
-        if (sm_map_.contains(m_sig_)){
-            Unregister();
-        }
-    }
+    // XSignal::~XSignal(){
+    //     if (sm_map_.contains(m_sig_)){
+    //         Unregister();
+    //     }
+    // }
 
 }

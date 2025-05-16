@@ -8,7 +8,7 @@
 #include <utility>
 #include <csignal>
 
-namespace wtd {
+namespace xtd {
 
 class XSignal final{
 
@@ -93,7 +93,7 @@ public:
     template<typename Fn,typename... Args>
     [[nodiscard]] static auto Register(const int &sig,const int &flags,
                                                 Fn&& fn,Args&& ...args){
-        const auto res{m_map_.try_emplace(sig,new XSignal(sig,flags,
+        const auto res{sm_map_.try_emplace(sig,new XSignal(sig,flags,
             std::forward<Fn>(fn),std::forward<Args>(args)...))};
         return res.second ? res.first->second : _sp_MySignal_type{};
     }
@@ -119,14 +119,14 @@ private:
     void * m_context_{};
 
     using call_map_t = std::unordered_map<int,_sp_MySignal_type>;
-    static inline call_map_t m_map_{};
+    static inline call_map_t sm_map_{};
 
 public:
     XSignal(const XSignal&) = delete;
     XSignal(XSignal&&) = delete;
     XSignal& operator=(const XSignal&) = delete;
     XSignal& operator=(XSignal&&) = delete;
-    ~XSignal() = default;
+    ~XSignal();
 };
 
 using _sp_MySignal_type = std::shared_ptr<XSignal>;

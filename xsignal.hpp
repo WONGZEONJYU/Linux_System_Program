@@ -91,9 +91,9 @@ namespace xtd {
         }
 
         explicit XSignal(const int &,const int &);
+        void Unregister_helper();
 
     public:
-
         template<typename Fn,typename... Args>
         [[nodiscard]] static auto Register(const int &sig,const int &flags,
                                                     Fn&& fn,Args&& ...args){
@@ -114,8 +114,11 @@ namespace xtd {
             return static_cast<ucontext_t *>(m_context_);
         }
 
+        void Unregister() ;
+        static void Unregister(const int &sig);
+
     private:
-        int m_sig_{};
+        int m_sig_{-1};
         struct sigaction m_act_{};
         siginfo_t m_info_{};
         _sp_base_type m_call_{};
@@ -129,7 +132,7 @@ namespace xtd {
         XSignal(XSignal&&) = delete;
         XSignal& operator=(const XSignal&) = delete;
         XSignal& operator=(XSignal&&) = delete;
-        ~XSignal() = default;
+        ~XSignal();
     };
 
     template<typename Fn,typename... Args>

@@ -37,9 +37,4 @@ namespace xtd {
         res->second->m_call_->func();
     }
 
-    XSignal::~XSignal(){
-        if (sm_map_.contains(m_sig_)){
-            sm_map_.erase(m_sig_);
-        }
-    }
 }

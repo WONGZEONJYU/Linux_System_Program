@@ -129,7 +129,7 @@ namespace xtd {
         XSignal(XSignal&&) = delete;
         XSignal& operator=(const XSignal&) = delete;
         XSignal& operator=(XSignal&&) = delete;
-        ~XSignal();
+        ~XSignal() = default;
     };
 
     template<typename Fn,typename... Args>

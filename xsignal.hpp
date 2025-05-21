@@ -97,7 +97,7 @@ namespace xtd {
         template<typename Fn,typename... Args>
         [[nodiscard]] static auto Register(const int &sig,const int &flags,
                                                     Fn&& fn,Args&& ...args){
-            if (sig <= 0 || flags <= 0){
+            if (sig <= 0 || flags < 0){
                 return Signal_Ptr{};
             }
 

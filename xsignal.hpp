@@ -2,7 +2,6 @@
 #define MY_SIGNAL_H
 
 #include <tuple>
-#include <unordered_map>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -13,9 +12,7 @@ namespace xtd {
     class XSignal;
     using Signal_Ptr = std::shared_ptr<XSignal>;
 
-    class XSignal final{
-
-        static void signal_handler(int,siginfo_t* ,void*);
+    class XSignal {
 
         class Base_{
         public:
@@ -84,14 +81,10 @@ namespace xtd {
             m_call_ = std::move(make_call_(std::forward<decltype(invoker_)>(invoker_)));
         }
 
-        template<typename Fn,typename... Args>
-        explicit XSignal(const int &sig,const int &flags,Fn&& fn,Args&& ...args):
-                XSignal(sig,flags){
-            init(std::forward<Fn>(fn),std::forward<Args>(args)...);
-        }
+        static Signal_Ptr create(const int &,const int &);
 
-        explicit XSignal(const int &,const int &);
-        void Unregister_helper();
+    protected:
+        explicit XSignal() = default;
 
     public:
         template<typename Fn,typename... Args>
@@ -101,51 +94,40 @@ namespace xtd {
                 return Signal_Ptr{};
             }
 
-            const auto &res{sm_map_.try_emplace(sig,new XSignal(sig,flags,
-                std::forward<Fn>(fn),std::forward<Args>(args)...))};
-            return res.second ? res.first->second : Signal_Ptr{};
+            const auto obj{create(sig,flags)};
+            if (obj){
+                obj->init(std::forward<Fn>(fn),std::forward<Args>(args)...);
+            }
+
+            return obj;
         }
 
-        static int sig(const int&);
-        [[nodiscard]] inline auto sig() const{return m_sig_;}
-        static siginfo_t siginfo(const int&);
-        [[nodiscard]] inline auto siginfo() const {return m_info_;}
-        static auto Send_signal(const __pid_t &pid_,const int &sig_,const sigval &val_){
-            return !sigqueue(pid_,sig_,val_);
-        }
+        [[nodiscard]] virtual int sig() const & = 0;
+        [[nodiscard]] virtual const siginfo_t& siginfo() const & = 0;
+        [[nodiscard]] virtual ucontext_t* context() const & = 0;
+        virtual void Unregister() = 0;
 
-        [[nodiscard]] auto context() const{
-            return static_cast<ucontext_t *>(m_context_);
-        }
-
-        void Unregister() ;
+        static bool Send_signal(const int &pid_,const int &sig_,const sigval &val_);
+        static siginfo_t siginfo(const int&sig);
         static void Unregister(const int &sig);
 
-    private:
-        int m_sig_{-1};
-        struct sigaction m_act_{};
-        siginfo_t m_info_{};
+    protected:
         _sp_base_type m_call_{};
-        void *m_context_{};
-
-        using call_map_t = std::unordered_map<int,Signal_Ptr>;
-        static inline call_map_t sm_map_{};
-
     public:
         XSignal(const XSignal&) = delete;
         XSignal(XSignal&&) = delete;
         XSignal& operator=(const XSignal&) = delete;
         XSignal& operator=(XSignal&&) = delete;
-        ~XSignal();
+        virtual ~XSignal() = default;
     };
 
     template<typename Fn,typename... Args>
-    static inline auto Register(const int &sig,const int &flags,
+    static inline auto Signal_Register(const int &sig,const int &flags,
         Fn&& fn,Args&& ...args){
         return XSignal::Register(sig,flags,std::forward<Fn>(fn),std::forward<Args>(args)...);
     }
 
-    static inline void Unregister(const int &sig){
+    static inline void Signal_Unregister(const int &sig){
         XSignal::Unregister(sig);
     }
 

@@ -18,7 +18,7 @@ namespace xtd {
         static void signal_handler(int,siginfo_t* ,void*);
 
         class Base_{
-            public:
+        public:
             virtual void func() = 0;
             virtual ~Base_() = default;
         protected:
@@ -28,13 +28,14 @@ namespace xtd {
         using _sp_base_type = std::shared_ptr<Base_>;
 
         template<typename Callable_>
-        class Base_impl_:public Base_ {
-            Callable_ m_S_handler_{};
-            public:
+        class Base_impl_ final : public Base_ {
+        public:
             explicit Base_impl_(Callable_&& f):m_S_handler_{std::forward<Callable_>(f)}{}
             void func() override {
                 m_S_handler_();
             }
+        private:
+            Callable_ m_S_handler_{};
         };
 
         template<typename Callable_>
@@ -75,7 +76,6 @@ namespace xtd {
         template<typename Callable_, typename... Args_>
         static inline auto make_invoker_(Callable_&& callable_, Args_&&... args_) {
             return Invoker_<Callable_,Args_...>{{std::forward<Callable_>(callable_), std::forward<Args_>(args_)...} };
-
         }
 
         template<typename Fn,typename... Args>
@@ -97,6 +97,10 @@ namespace xtd {
         template<typename Fn,typename... Args>
         [[nodiscard]] static auto Register(const int &sig,const int &flags,
                                                     Fn&& fn,Args&& ...args){
+            if (sig <= 0 || flags <= 0){
+                return Signal_Ptr{};
+            }
+
             const auto &res{sm_map_.try_emplace(sig,new XSignal(sig,flags,
                 std::forward<Fn>(fn),std::forward<Args>(args)...))};
             return res.second ? res.first->second : Signal_Ptr{};
@@ -140,7 +144,6 @@ namespace xtd {
         Fn&& fn,Args&& ...args){
         return XSignal::Register(sig,flags,std::forward<Fn>(fn),std::forward<Args>(args)...);
     }
-
 }
 
 #endif

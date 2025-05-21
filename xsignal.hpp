@@ -144,6 +144,11 @@ namespace xtd {
         Fn&& fn,Args&& ...args){
         return XSignal::Register(sig,flags,std::forward<Fn>(fn),std::forward<Args>(args)...);
     }
+
+    static inline void Unregister(const int &sig){
+        XSignal::Unregister(sig);
+    }
+
 }
 
 #endif

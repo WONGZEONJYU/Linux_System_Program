@@ -8,6 +8,10 @@ namespace xtd {
 
     class XSignal_impl final: public XSignal {
 
+        SIG_DISABLE_COPY_MOVE(XSignal_impl)
+
+        struct Private{ explicit Private() = default; };
+
         static inline void no_sig_(const int &sig){
             std::stringstream msg{};
             msg << "This signal(id: " << sig << ")" << "is not registered\n";
@@ -16,8 +20,8 @@ namespace xtd {
 
         static void signal_handler(const int sig,siginfo_t* const info,void* const ctx) {
 
-            const auto &it{sm_map_.find(sig)};
-            if (sm_map_.end() == it || !it->second || !it->second->m_call_){
+            const auto &it{sm_callable_map_.find(sig)};
+            if (sm_callable_map_.end() == it || !it->second || !it->second->m_call_){
                 no_sig_(sig);
                 return;
             }
@@ -41,20 +45,14 @@ namespace xtd {
             m_call_ = std::forward<decltype(p)>(p);
         }
 
-    protected:
-        using XSignal_Impl_Ptr = std::shared_ptr<XSignal_impl>;
+    public:
 
         int sig() const & override {
             return m_sig_;
         }
 
-        const siginfo_t &siginfo() const & override{
+        const siginfo_t &siginfo() const & override {
             return m_info_;
-        }
-
-        static auto siginfo(const int &sig) {
-            const auto &it{sm_map_.find(sig)};
-            return  sm_map_.end() != it ? it->second->m_info_ : siginfo_t{};
         }
 
         ucontext_t * context() const & override {
@@ -63,19 +61,25 @@ namespace xtd {
 
         void Unregister() override {
             Unregister_helper();
-            sm_map_.erase(m_sig_);
+            sm_callable_map_.erase(m_sig_);
         }
 
         static void Unregister(const int &sig){
-            if (const auto &it{sm_map_.find(sig)};sm_map_.end() != it){
+            if (const auto &it{sm_callable_map_.find(sig)};sm_callable_map_.end() != it){
                 it->second->Unregister();
             }
         }
 
+        static auto siginfo(const int &sig) {
+            const auto &it{sm_callable_map_.find(sig)};
+            return  sm_callable_map_.end() != it ? it->second->m_info_ : siginfo_t{};
+        }
+
+        using XSignal_Impl_Ptr = std::shared_ptr<XSignal_impl>;
+
     private:
         using call_map_t = std::unordered_map<int,XSignal_Impl_Ptr>;
-        friend class XSignal;
-        static inline call_map_t sm_map_{};
+        static inline call_map_t sm_callable_map_{};
         int m_sig_{-1};
         struct sigaction m_act_{};
         siginfo_t m_info_{};
@@ -83,16 +87,25 @@ namespace xtd {
         Callable_Ptr m_call_{};
 
     public:
-        explicit XSignal_impl(const int &sig,const int &flags):m_sig_(sig){
+        explicit XSignal_impl(const int &sig,const int &flags,const Private &):m_sig_(sig){
             m_act_.sa_sigaction = signal_handler;
             m_act_.sa_flags = SA_SIGINFO | flags;
             sigaction(sig, &m_act_,{});
         }
 
-        XSignal_impl(const XSignal_impl &) = delete;
-        XSignal_impl(XSignal_impl &&) = delete;
-        XSignal_impl& operator=(const XSignal_impl &) = delete;
-        XSignal_impl& operator=(XSignal_impl &&) = delete;
+        static XSignal_Impl_Ptr create(const int &sig,const int &flags){
+            if (sig <= 0 || flags < 0){
+                return {};
+            }
+
+            try{
+                const auto obj{std::make_shared<XSignal_impl>(sig,flags,Private{})};
+                sm_callable_map_[sig] = obj;
+                return obj;
+            }catch (const std::exception &){
+                return {};
+            }
+        }
 
         ~XSignal_impl() override {
             Unregister_helper();
@@ -112,17 +125,6 @@ namespace xtd {
     }
 
     Signal_Ptr XSignal::create(const int &sig,const int &flags){
-
-        if (sig <= 0 || flags < 0){
-            return {};
-        }
-
-        try{
-            const auto obj{std::make_shared<XSignal_impl>(sig,flags)};
-            obj->sm_map_[sig] = obj;
-            return obj;
-        }catch (const std::exception &){
-            return {};
-        }
+        return XSignal_impl::create(sig,flags);
     }
 }

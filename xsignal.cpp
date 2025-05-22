@@ -8,20 +8,24 @@ namespace xtd {
 
     class XSignal_impl final: public XSignal {
 
+        static inline void no_sig_(const int &sig){
+            std::stringstream msg{};
+            msg << "This signal(id: " << sig << ")" << "is not registered\n";
+            write(STDERR_FILENO,msg.str().c_str(),msg.str().length());
+        }
+
         static void signal_handler(const int sig,siginfo_t* const info,void* const ctx) {
 
-            const auto &res{sm_map_.find(sig)};
-            if (sm_map_.end() == res || !res->second || !res->second->m_call_){
-                std::stringstream msg{};
-                msg << "This signal(id: " << sig << ")" << "is not registered\n";
-                write(STDERR_FILENO,msg.str().c_str(),msg.str().length());
+            const auto &it{sm_map_.find(sig)};
+            if (sm_map_.end() == it || !it->second || !it->second->m_call_){
+                no_sig_(sig);
                 return;
             }
-
-            res->second->m_context_ = ctx;
-            res->second->m_sig_ = sig;
-            res->second->m_info_ = *info;
-            res->second->m_call_->func();
+            const auto &this_{it->second};
+            this_->m_context_ = ctx;
+            this_->m_sig_ = sig;
+            this_->m_info_ = *info;
+            this_->m_call_->func();
         }
 
         void Unregister_helper() {
@@ -33,7 +37,11 @@ namespace xtd {
             }
         }
 
-    public:
+        void set_call(const Callable_Ptr &p) override{
+            m_call_ = std::forward<decltype(p)>(p);
+        }
+
+    protected:
         using XSignal_Impl_Ptr = std::shared_ptr<XSignal_impl>;
 
         int sig() const & override {
@@ -45,7 +53,7 @@ namespace xtd {
         }
 
         static auto siginfo(const int &sig) {
-            const auto it{sm_map_.find(sig)};
+            const auto &it{sm_map_.find(sig)};
             return  sm_map_.end() != it ? it->second->m_info_ : siginfo_t{};
         }
 
@@ -59,7 +67,7 @@ namespace xtd {
         }
 
         static void Unregister(const int &sig){
-            if (const auto it{sm_map_.find(sig)};sm_map_.end() != it){
+            if (const auto &it{sm_map_.find(sig)};sm_map_.end() != it){
                 it->second->Unregister();
             }
         }
@@ -72,6 +80,7 @@ namespace xtd {
         struct sigaction m_act_{};
         siginfo_t m_info_{};
         void *m_context_{};
+        Callable_Ptr m_call_{};
 
     public:
         explicit XSignal_impl(const int &sig,const int &flags):m_sig_(sig){
@@ -85,7 +94,7 @@ namespace xtd {
         XSignal_impl& operator=(const XSignal_impl &) = delete;
         XSignal_impl& operator=(XSignal_impl &&) = delete;
 
-        ~XSignal_impl() override{
+        ~XSignal_impl() override {
             Unregister_helper();
         }
     };
@@ -103,6 +112,11 @@ namespace xtd {
     }
 
     Signal_Ptr XSignal::create(const int &sig,const int &flags){
+
+        if (sig <= 0 || flags < 0){
+            return {};
+        }
+
         try{
             const auto obj{std::make_shared<XSignal_impl>(sig,flags)};
             obj->sm_map_[sig] = obj;

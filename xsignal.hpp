@@ -22,12 +22,11 @@ namespace xtd {
             Base_() = default;
         };
 
-        using _sp_base_type = std::shared_ptr<Base_>;
-
         template<typename Callable_>
         class Base_impl_ final : public Base_ {
         public:
-            explicit Base_impl_(Callable_&& f):m_S_handler_{std::forward<Callable_>(f)}{}
+            explicit Base_impl_(Callable_&& f):
+            m_S_handler_{std::forward<Callable_>(f)}{}
             void func() override {
                 m_S_handler_();
             }
@@ -46,8 +45,7 @@ namespace xtd {
             template<typename> struct result_{};
 
             template<typename Fn_, typename... Args_>
-
-            struct result_<std::tuple<Fn_, Args_...>> : std::invoke_result<Fn_, Args_...>{ };
+            struct result_<std::tuple<Fn_, Args_...>> : std::invoke_result<Fn_, Args_...>{};
 
             template<size_t... Ind_>
             typename result_<Tuple_>::type M_invoke_(std::_Index_tuple<Ind_...>) {
@@ -72,28 +70,27 @@ namespace xtd {
 
         template<typename Callable_, typename... Args_>
         static inline auto make_invoker_(Callable_&& callable_, Args_&&... args_) {
-            return Invoker_<Callable_,Args_...>{{std::forward<Callable_>(callable_), std::forward<Args_>(args_)...} };
+            return Invoker_<Callable_,Args_...>{{std::forward<Callable_>(callable_),
+                std::forward<Args_>(args_)...} };
         }
 
         template<typename Fn,typename... Args>
         inline void init(Fn&& fn,Args&& ...args){
             auto invoker_ {make_invoker_(std::forward<Fn>(fn),std::forward<Args>(args)...)};
-            m_call_ = std::move(make_call_(std::forward<decltype(invoker_)>(invoker_)));
+            set_call(make_call_(std::forward<decltype(invoker_)>(invoker_)));
         }
 
         static Signal_Ptr create(const int &,const int &);
 
     protected:
-        explicit XSignal() = default;
+        using Callable_Ptr = std::shared_ptr<Base_>;
+        virtual void set_call(const Callable_Ptr &) = 0;
+        XSignal() = default;
 
     public:
         template<typename Fn,typename... Args>
-        [[nodiscard]] static auto Register(const int &sig,const int &flags,
+        [[nodiscard]] inline static auto Register(const int &sig,const int &flags,
                                                     Fn&& fn,Args&& ...args){
-            if (sig <= 0 || flags < 0){
-                return Signal_Ptr{};
-            }
-
             const auto obj{create(sig,flags)};
             if (obj){
                 obj->init(std::forward<Fn>(fn),std::forward<Args>(args)...);
@@ -111,9 +108,6 @@ namespace xtd {
         static siginfo_t siginfo(const int&sig);
         static void Unregister(const int &sig);
 
-    protected:
-        _sp_base_type m_call_{};
-    public:
         XSignal(const XSignal&) = delete;
         XSignal(XSignal&&) = delete;
         XSignal& operator=(const XSignal&) = delete;

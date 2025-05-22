@@ -55,7 +55,7 @@ namespace xtd {
             return m_info_;
         }
 
-        ucontext_t * context() const & override {
+        ucontext_t* context() const & override {
             return static_cast<ucontext_t*>(m_context_);
         }
 

@@ -21,8 +21,6 @@ namespace xtd {
     class XSignal;
     using Signal_Ptr = std::shared_ptr<XSignal>;
 
-
-
     class XSignal {
         SIG_DISABLE_COPY_MOVE(XSignal)
 

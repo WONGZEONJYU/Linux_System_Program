@@ -87,7 +87,7 @@ namespace xtd {
         Callable_Ptr m_call_{};
 
     public:
-        explicit XSignal_impl(const int &sig,const int &flags,const Private &):m_sig_(sig){
+        explicit XSignal_impl(const int &sig,const int &flags,Private):m_sig_(sig){
             m_act_.sa_sigaction = signal_handler;
             m_act_.sa_flags = SA_SIGINFO | flags;
             sigaction(sig, &m_act_,{});

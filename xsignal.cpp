@@ -6,9 +6,9 @@
 
 namespace xtd {
 
-    class XSignal_impl final: public XSignal {
+    class XSignal_Impl final: public XSignal {
 
-        SIG_DISABLE_COPY_MOVE(XSignal_impl)
+        SIG_DISABLE_COPY_MOVE(XSignal_Impl)
 
         struct Private{ explicit Private() = default; };
 
@@ -25,11 +25,12 @@ namespace xtd {
                 no_sig_(sig);
                 return;
             }
+
             const auto &this_{it->second};
             this_->m_context_ = ctx;
             this_->m_sig_ = sig;
             this_->m_info_ = *info;
-            this_->m_call_->func();
+            this_->m_call_->call();
         }
 
         void Unregister_helper() {
@@ -46,16 +47,15 @@ namespace xtd {
         }
 
     public:
-
-        int sig() const & override {
+        [[nodiscard]] int sig() const & override {
             return m_sig_;
         }
 
-        const siginfo_t &siginfo() const & override {
+        [[nodiscard]] const siginfo_t &siginfo() const & override {
             return m_info_;
         }
 
-        ucontext_t* context() const & override {
+        [[nodiscard]] ucontext_t* context() const & override {
             return static_cast<ucontext_t*>(m_context_);
         }
 
@@ -75,7 +75,7 @@ namespace xtd {
             return  sm_callable_map_.end() != it ? it->second->m_info_ : siginfo_t{};
         }
 
-        using XSignal_Impl_Ptr = std::shared_ptr<XSignal_impl>;
+        using XSignal_Impl_Ptr = std::shared_ptr<XSignal_Impl>;
 
     private:
         using call_map_t = std::unordered_map<int,XSignal_Impl_Ptr>;
@@ -87,7 +87,7 @@ namespace xtd {
         Callable_Ptr m_call_{};
 
     public:
-        explicit XSignal_impl(const int &sig,const int &flags,Private):m_sig_(sig){
+        explicit XSignal_Impl(const int &sig,const int &flags,Private):m_sig_(sig){
             m_act_.sa_sigaction = signal_handler;
             m_act_.sa_flags = SA_SIGINFO | flags;
             sigaction(sig, &m_act_,{});
@@ -99,7 +99,7 @@ namespace xtd {
             }
 
             try{
-                const auto obj{std::make_shared<XSignal_impl>(sig,flags,Private{})};
+                const auto obj{std::make_shared<XSignal_Impl>(sig,flags,Private{})};
                 sm_callable_map_[sig] = obj;
                 return obj;
             }catch (const std::exception &){
@@ -107,17 +107,17 @@ namespace xtd {
             }
         }
 
-        ~XSignal_impl() override {
+        ~XSignal_Impl() override {
             Unregister_helper();
         }
     };
 
     siginfo_t XSignal::siginfo(const int &sig){
-        return XSignal_impl::siginfo(sig);
+        return XSignal_Impl::siginfo(sig);
     }
 
     void XSignal::Unregister(const int &sig){
-        XSignal_impl::Unregister(sig);
+        XSignal_Impl::Unregister(sig);
     }
 
     bool XSignal::Send_signal(const int &pid_,const int &sig_,const sigval &val_){
@@ -125,6 +125,6 @@ namespace xtd {
     }
 
     Signal_Ptr XSignal::create(const int &sig,const int &flags){
-        return XSignal_impl::create(sig,flags);
+        return XSignal_Impl::create(sig,flags);
     }
 }
